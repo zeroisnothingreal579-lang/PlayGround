@@ -1,0 +1,54 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      PUBLIC_URL: ${PUBLIC_URL:-http://localhost:3000}
+      JWT_SECRET: ${JWT_SECRET:-change-me-to-a-long-random-secret}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      DATABASE_URL: postgres://clouddroid:clouddroid@postgres:5432/clouddroid
+      REDIS_URL: redis://redis:6379
+      # Point at a host running the Android runtime, or switch to `demo` for a
+      # self-contained stack with clearly-labelled demo phones.
+      CLOUDDROID_PROVIDER: ${CLOUDDROID_PROVIDER:-demo}
+      ANDROID_HOME: ${ANDROID_HOME:-/opt/android-sdk}
+      GMS_AVAILABLE: "0"
+      SEED_DEMO: ${SEED_DEMO:-true}
+    volumes:
+      - clouddroid-data:/app/var
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: clouddroid
+      POSTGRES_PASSWORD: clouddroid
+      POSTGRES_DB: clouddroid
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U clouddroid"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+
+volumes:
+  clouddroid-data:
+  postgres-data:
+  redis-data:

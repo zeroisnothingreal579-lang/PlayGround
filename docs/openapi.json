@@ -1,0 +1,384 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "CloudDroid API",
+    "version": "1.0.0",
+    "description": "Manage real cloud-hosted Android phones, stream their framebuffer and transfer files. Authentication uses an HTTP-only session cookie."
+  },
+  "servers": [{ "url": "/api/v1" }],
+  "tags": [
+    { "name": "System" },
+    { "name": "Auth" },
+    { "name": "Devices" },
+    { "name": "Files" },
+    { "name": "Admin" }
+  ],
+  "components": {
+    "securitySchemes": {
+      "cookieAuth": { "type": "apiKey", "in": "cookie", "name": "clouddroid_session" }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "string" },
+          "code": { "type": "string" }
+        }
+      },
+      "Plan": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "priceCents": { "type": "integer" },
+          "maxDevices": { "type": "integer" },
+          "maxConcurrent": { "type": "integer" },
+          "storageMb": { "type": "integer" },
+          "vcpu": { "type": "integer" },
+          "ramMb": { "type": "integer" },
+          "monthlyHours": { "type": "integer" }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "name": { "type": "string" },
+          "role": { "type": "string", "enum": ["user", "admin"] },
+          "planId": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "Device": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "androidVersion": { "type": "string" },
+          "apiLevel": { "type": "integer" },
+          "profileId": { "type": "string" },
+          "profileName": { "type": "string" },
+          "resolution": { "type": "string" },
+          "ramMb": { "type": "integer" },
+          "vcpu": { "type": "integer" },
+          "storageGb": { "type": "integer" },
+          "region": { "type": "string" },
+          "gms": { "type": "boolean" },
+          "status": { "type": "string", "enum": ["stopped", "starting", "running", "error", "deleting"] },
+          "provider": { "type": "string", "enum": ["emulator", "external", "demo"] },
+          "isDemo": { "type": "boolean" },
+          "streamCapable": { "type": "boolean" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "StreamTicket": {
+        "type": "object",
+        "properties": {
+          "ticket": { "type": "string" },
+          "expiresAt": { "type": "string", "format": "date-time" },
+          "wsPath": { "type": "string" },
+          "transport": { "type": "string" }
+        }
+      }
+    }
+  },
+  "security": [{ "cookieAuth": [] }],
+  "paths": {
+    "/healthz": {
+      "get": {
+        "tags": ["System"],
+        "summary": "Liveness and database backend",
+        "security": [],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/public/status": {
+      "get": {
+        "tags": ["System"],
+        "summary": "Public runtime summary",
+        "security": [],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/plans": {
+      "get": {
+        "tags": ["System"],
+        "summary": "List plans",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "plans": { "type": "array", "items": { "$ref": "#/components/schemas/Plan" } } }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/catalog": {
+      "get": {
+        "tags": ["System"],
+        "summary": "Android profiles and plan limits",
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/usage": { "get": { "tags": ["System"], "summary": "Current usage", "responses": { "200": { "description": "OK" } } } },
+    "/activity": { "get": { "tags": ["System"], "summary": "Activity timeline", "responses": { "200": { "description": "OK" } } } },
+    "/billing": { "get": { "tags": ["System"], "summary": "Billing overview", "responses": { "200": { "description": "OK" } } } },
+    "/billing/change-plan": {
+      "post": {
+        "tags": ["System"],
+        "summary": "Change plan",
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "type": "object", "properties": { "planId": { "type": "string" } }, "required": ["planId"] } }
+          }
+        },
+        "responses": { "200": { "description": "OK" }, "400": { "description": "Invalid plan" } }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Register",
+        "security": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": { "name": { "type": "string" }, "email": { "type": "string" }, "password": { "type": "string" } },
+                "required": ["name", "email", "password"]
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" }, "409": { "description": "Email exists" } }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Sign in",
+        "security": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": { "email": { "type": "string" }, "password": { "type": "string" } },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "OK" }, "401": { "description": "Invalid credentials" } }
+      }
+    },
+    "/auth/logout": { "post": { "tags": ["Auth"], "summary": "Sign out", "responses": { "200": { "description": "OK" } } } },
+    "/auth/me": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Current user",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "user": { "$ref": "#/components/schemas/User" }, "plan": { "$ref": "#/components/schemas/Plan" } }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": { "tags": ["Auth"], "summary": "Update profile", "responses": { "200": { "description": "OK" } } },
+      "delete": { "tags": ["Auth"], "summary": "Delete account", "responses": { "200": { "description": "OK" } } }
+    },
+    "/auth/me/password": { "post": { "tags": ["Auth"], "summary": "Change password", "responses": { "200": { "description": "OK" } } } },
+    "/auth/sessions": { "get": { "tags": ["Auth"], "summary": "List sessions", "responses": { "200": { "description": "OK" } } } },
+    "/auth/sessions/{id}": {
+      "delete": {
+        "tags": ["Auth"],
+        "summary": "Revoke a session",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/devices": {
+      "get": {
+        "tags": ["Devices"],
+        "summary": "List devices",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "properties": { "devices": { "type": "array", "items": { "$ref": "#/components/schemas/Device" } } } }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Devices"],
+        "summary": "Create a device",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "profileId": { "type": "string" },
+                  "androidVersion": { "type": "string" },
+                  "region": { "type": "string" },
+                  "startNow": { "type": "boolean" }
+                },
+                "required": ["name"]
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" }, "402": { "description": "Plan limit reached" } }
+      }
+    },
+    "/devices/{id}": {
+      "get": {
+        "tags": ["Devices"],
+        "summary": "Get device",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "OK" }, "404": { "description": "Not found" } }
+      },
+      "patch": {
+        "tags": ["Devices"],
+        "summary": "Update device",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "OK" } }
+      },
+      "delete": {
+        "tags": ["Devices"],
+        "summary": "Delete device",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/devices/{id}/start": {
+      "post": {
+        "tags": ["Devices"],
+        "summary": "Start device",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/devices/{id}/stop": {
+      "post": {
+        "tags": ["Devices"],
+        "summary": "Stop device",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/devices/{id}/restart": {
+      "post": {
+        "tags": ["Devices"],
+        "summary": "Restart device",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/devices/{id}/status": {
+      "get": {
+        "tags": ["Devices"],
+        "summary": "Device status",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/devices/{id}/snapshot": {
+      "get": {
+        "tags": ["Devices"],
+        "summary": "Snapshot image",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "PNG", "content": { "image/png": { "schema": { "type": "string", "format": "binary" } } } } }
+      }
+    },
+    "/devices/{id}/screenshot": {
+      "get": {
+        "tags": ["Devices"],
+        "summary": "Fresh screenshot",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "PNG", "content": { "image/png": { "schema": { "type": "string", "format": "binary" } } } } }
+      }
+    },
+    "/devices/{id}/stream-ticket": {
+      "post": {
+        "tags": ["Devices"],
+        "summary": "Mint a one-time streaming ticket",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/StreamTicket" } } } },
+          "409": { "description": "Device not running" }
+        }
+      }
+    },
+    "/files": { "get": { "tags": ["Files"], "summary": "List files", "responses": { "200": { "description": "OK" } } } },
+    "/devices/{id}/files": {
+      "get": {
+        "tags": ["Files"],
+        "summary": "List device files",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "OK" } }
+      },
+      "post": {
+        "tags": ["Files"],
+        "summary": "Upload a file",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": { "type": "object", "properties": { "file": { "type": "string", "format": "binary" } }, "required": ["file"] }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" }, "413": { "description": "Storage limit" } }
+      }
+    },
+    "/files/{id}/download": {
+      "get": {
+        "tags": ["Files"],
+        "summary": "Download a file",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "File", "content": { "application/octet-stream": { "schema": { "type": "string", "format": "binary" } } } } }
+      }
+    },
+    "/files/{id}/install": {
+      "post": {
+        "tags": ["Files"],
+        "summary": "Install an APK",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/files/{id}": {
+      "delete": {
+        "tags": ["Files"],
+        "summary": "Delete a file",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/admin/overview": { "get": { "tags": ["Admin"], "summary": "Fleet overview", "responses": { "200": { "description": "OK" }, "403": { "description": "Forbidden" } } } },
+    "/admin/users": { "get": { "tags": ["Admin"], "summary": "Users", "responses": { "200": { "description": "OK" } } } },
+    "/admin/devices": { "get": { "tags": ["Admin"], "summary": "All devices", "responses": { "200": { "description": "OK" } } } },
+    "/admin/audit": { "get": { "tags": ["Admin"], "summary": "Audit log", "responses": { "200": { "description": "OK" } } } }
+  }
+}
