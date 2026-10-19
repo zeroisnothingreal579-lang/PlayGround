@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="description" content="PlayGround Chat - a fast, clean chat workspace for talking to an AI agent." />
+    <title>PlayGround Chat</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%236c8cff'/%3E%3Cpath d='M9 21V11l4 5 4-5v10' stroke='%2308122b' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app" id="app">
+      <div class="backdrop" id="backdrop" hidden></div>
+
+      <aside class="sidebar" id="sidebar" aria-label="Conversations">
+        <div class="brand">
+          <div class="brand-logo" aria-hidden="true">PG</div>
+          <div class="brand-text">
+            <strong>PlayGround Chat</strong>
+            <span>Talk to your agent</span>
+          </div>
+        </div>
+
+        <button class="btn btn-primary new-chat" id="new-chat" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+          New chat
+        </button>
+
+        <nav class="convo-list" id="convo-list" aria-label="Chat history"></nav>
+
+        <div class="sidebar-footer">
+          <label class="field">
+            <span>Agent</span>
+            <select id="persona" aria-label="Agent persona"></select>
+          </label>
+          <button class="btn btn-ghost theme-toggle" id="theme-toggle" type="button">
+            <span class="theme-label">Theme</span>
+            <span class="theme-value" id="theme-value">Dark</span>
+          </button>
+          <p class="credit">Built with OMGithub · <a href="https://omgithub.com" target="_blank" rel="noopener">omgithub.com</a></p>
+        </div>
+      </aside>
+
+      <main class="chat">
+        <header class="chat-header">
+          <button class="icon-btn menu-btn" id="menu" type="button" aria-label="Open conversations" aria-expanded="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+          </button>
+          <div class="chat-heading">
+            <h1 id="convo-title">New chat</h1>
+            <div class="status" id="status" title="Connection status">
+              <span class="status-dot" id="status-dot"></span>
+              <span id="status-text">Ready</span>
+            </div>
+          </div>
+          <div class="chat-actions">
+            <button class="icon-btn" id="clear" type="button" aria-label="Clear this chat" title="Clear this chat">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m-8 0 1 12a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-12" /></svg>
+            </button>
+          </div>
+        </header>
+
+        <section class="messages" id="messages" role="log" aria-live="polite" aria-label="Chat messages"></section>
+
+        <form class="composer" id="composer" autocomplete="off">
+          <div class="composer-box">
+            <textarea
+              id="input"
+              rows="1"
+              placeholder="Message your agent…"
+              aria-label="Message"
+              maxlength="8000"
+            ></textarea>
+            <button class="send-btn" id="send" type="submit" aria-label="Send message" title="Send">
+              <svg class="send-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7" /></svg>
+              <span class="stop-icon" aria-hidden="true"><span></span></span>
+            </button>
+          </div>
+          <div class="composer-hint">
+            <span><kbd>Enter</kbd> to send · <kbd>Shift</kbd>+<kbd>Enter</kbd> for a new line</span>
+          </div>
+        </form>
+      </main>
+    </div>
+
+    <template id="empty-template">
+      <div class="empty">
+        <div class="empty-mark" aria-hidden="true">PG</div>
+        <h2>How can I help today?</h2>
+        <p>Ask a question, draft something, or plan your next build. Your chats stay in this browser.</p>
+        <div class="chips" id="chips">
+          <button type="button" data-prompt="Explain how a chat app works end to end.">Explain how a chat app works</button>
+          <button type="button" data-prompt="Write a short, friendly launch tweet for my new app.">Draft a launch tweet</button>
+          <button type="button" data-prompt="Help me debug why my fetch request returns a CORS error.">Debug a CORS error</button>
+          <button type="button" data-prompt="Give me three ideas for a weekend side project.">Weekend project ideas</button>
+        </div>
+      </div>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
