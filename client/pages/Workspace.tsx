@@ -680,7 +680,7 @@ function SessionPanel({ device, connected, fps, latency, quality, qualityTone, c
             ['Profile', device.profileName],
             ['Memory', `${formatGbFromMb(device.ramMb)} · ${device.vcpu} vCPU`],
             ['Storage', `${device.storageGb} GB`],
-            ['Google services', device.gms ? 'Certified GMS' : 'AOSP · no GMS'],
+            ['Google services', device.gms ? 'Google Play · GMS' : 'AOSP · no GMS'],
             ['Provider', device.isDemo ? 'demo (not live)' : device.provider],
             ['Created', relativeTime(device.createdAt)],
           ].map(([label, value]) => (
@@ -711,7 +711,9 @@ function SessionPanel({ device, connected, fps, latency, quality, qualityTone, c
 
       <div className="rounded-xl border border-amber-400/10 bg-amber-400/[0.025] p-3 text-[9px] leading-relaxed text-zinc-500">
         <p className="flex items-center gap-1.5 font-medium text-amber-200/70"><BatteryCharging className="h-3 w-3" /> Runtime note</p>
-        <p className="mt-1">This deployment uses AOSP. Google Play Store and Play Services are not installed unless the node has a certified, licensed GMS image.</p>
+        <p className="mt-1">{device.gms
+          ? 'This device runs the official Google Play system image. Open Play Store inside the phone to sign in and install apps.'
+          : 'This device runs an AOSP image without Google Play Store or Play Services.'}</p>
       </div>
     </div>
   )

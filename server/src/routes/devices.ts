@@ -4,6 +4,7 @@ import { db } from '../db.js'
 import { requireAuth } from '../auth.js'
 import { asyncHandler, httpError } from '../http.js'
 import { rateLimit } from '../rate-limit.js'
+import { config } from '../config.js'
 import { nowIso } from '../util.js'
 import {
   audit, createDevice, deleteDevice, effectiveProviderKind, getDeviceRow, getPlan, restartDevice,
@@ -39,15 +40,16 @@ devicesRouter.post('/', rateLimit({ key: 'device-create', limit: 20, windowMs: 1
     vcpu: z.number().int().min(1).max(8),
     storageGb: z.number().int().refine((value) => [16, 32, 64, 128].includes(value), 'Choose a supported storage size'),
     region: z.literal('local'),
-    gms: z.boolean().default(false),
+    gms: z.boolean().optional(),
   }).parse(req.body)
 
-  if (body.gms) throw httpError(400, 'Google services are not licensed on this node.', 'gms_unavailable')
+  const wantsGms = body.gms ?? config.gmsAvailable
+  if (wantsGms && !config.gmsAvailable) throw httpError(400, 'Google Play Services are not available on this node.', 'gms_unavailable')
   const plan = await getPlan(req.user!.planId)
   const count = await db.get<{ count: number }>('SELECT COUNT(*) AS count FROM devices WHERE user_id = ?', [req.user!.id])
   if (Number(count?.count || 0) >= plan.maxDevices) throw httpError(403, 'Your plan device limit has been reached.', 'plan_limit')
 
-  const row = await createDevice(req.user!.id, req.user!.planId, body)
+  const row = await createDevice(req.user!.id, req.user!.planId, { ...body, gms: wantsGms })
   res.status(201).json({ device: toDevice(row) })
 }))
 

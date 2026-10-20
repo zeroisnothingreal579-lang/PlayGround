@@ -327,7 +327,7 @@ export default function FilesPage() {
 
           <div className="rounded-xl border border-iris-400/15 bg-iris-500/[0.05] p-4 text-[10px] leading-relaxed text-zinc-500">
             <p className="flex items-center gap-1.5 font-medium text-iris-200"><Info className="h-3 w-3" /> APK security</p>
-            <p className="mt-1.5">Sideloaded APKs bypass Play Protect. Only install packages you trust. CloudDroid does not claim Play certification for AOSP devices.</p>
+            <p className="mt-1.5">Sideloaded APKs bypass Play Protect. Only install packages you trust. Play Protect applies to apps installed through the Play Store; sideloaded packages are not scanned for you.</p>
           </div>
         </div>
       </div>

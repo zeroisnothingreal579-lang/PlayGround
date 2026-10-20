@@ -117,7 +117,7 @@ export default function DashboardPage() {
       if (action === 'start') {
         toast(device.isDemo ? 'Demo phone starting' : 'Android boot requested', {
           kind: 'info',
-          description: device.isDemo ? 'This demo phone has no live Android runtime.' : 'Booting the AOSP instance. The workspace will show live status.',
+          description: device.isDemo ? 'This demo phone has no live Android runtime.' : 'Booting the Android instance. The workspace will show live status.',
         })
         navigate(`/app/phones/${device.id}`)
       } else if (action === 'restart') {
@@ -202,7 +202,7 @@ export default function DashboardPage() {
           <Badge tone={runtime.data?.mode === 'live' ? 'green' : isDegraded ? 'rose' : 'amber'}>
             {runtime.data?.bootedDevices || 0} booted
           </Badge>
-          <Badge tone="default">{runtime.data?.gmsAvailable ? 'GMS licensed' : 'AOSP · no GMS'}</Badge>
+          <Badge tone="default">{runtime.data?.gmsAvailable ? 'Google Play · GMS' : 'AOSP · no GMS'}</Badge>
         </div>
       </div>
 
@@ -340,7 +340,7 @@ export default function DashboardPage() {
             icon={Smartphone}
             title={devices.length === 0 ? 'No cloud phones yet' : 'No phones match this filter'}
             description={devices.length === 0
-              ? 'Create a phone to boot a real AOSP Android instance and stream it to your browser.'
+              ? 'Create a phone to boot a real Android instance and stream it to your browser.'
               : 'Try a different search term or status filter.'}
             action={devices.length === 0
               ? <Link to="/app/create"><Button variant="primary"><Plus className="h-4 w-4" /> Create your first phone</Button></Link>
@@ -421,7 +421,7 @@ export default function DashboardPage() {
                 ['Display', settingsTarget.resolution],
                 ['Memory', `${formatGbFromMb(settingsTarget.ramMb)} RAM · ${settingsTarget.vcpu} vCPU`],
                 ['Storage', `${settingsTarget.storageGb} GB`],
-                ['Google services', settingsTarget.gms ? 'Certified GMS' : 'AOSP · no Play Services'],
+                ['Google services', settingsTarget.gms ? 'Google Play · GMS' : 'AOSP · no Play Services'],
                 ['Runtime', settingsTarget.isDemo ? 'Demo data (not live)' : settingsTarget.provider],
                 ['Status', settingsTarget.status],
               ].map(([label, value]) => (

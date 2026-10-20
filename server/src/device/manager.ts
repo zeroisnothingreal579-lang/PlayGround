@@ -190,9 +190,11 @@ export async function runtimeInfo(): Promise<RuntimeInfo> {
   if (kind !== 'demo') {
     if (available) {
       mode = 'live'
-      label = kind === 'emulator' ? 'Managed AOSP runtime' : 'Attached Android runtime'
+      label = kind === 'emulator'
+        ? (config.gmsAvailable ? 'Managed Android · Google Play' : 'Managed AOSP runtime')
+        : 'Attached Android runtime'
       detail = kind === 'emulator'
-        ? `KVM-backed AOSP emulator · ${bootedDevices} booted · WebSocket frame transport`
+        ? `KVM-backed ${config.gmsAvailable ? 'Google Play' : 'AOSP'} Android emulator · ${bootedDevices} booted · WebSocket frame transport`
         : `External adb device · ${bootedDevices} online · WebSocket frame transport`
     } else {
       mode = 'degraded'
@@ -257,9 +259,6 @@ export async function createDevice(userId: string, planId: string, input: {
     if (Number(bound?.count || 0) > 0) {
       throw Object.assign(new Error('This node has one external Android runtime and it is already bound to a phone.'), { status: 409, code: 'runtime_capacity' })
     }
-  }
-  if (config.gmsAvailable && input.gms !== true) {
-    /* AOSP is the safe default even when GMS is available. */
   }
   if (input.gms && !config.gmsAvailable) {
     throw Object.assign(new Error('Google services are not licensed on this node. Create an AOSP device instead.'), { status: 400 })

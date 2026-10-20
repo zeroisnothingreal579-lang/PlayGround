@@ -120,7 +120,7 @@ export class EmulatorProvider implements DeviceProvider {
     }
     await startAdbServer()
     if (!(await this.available())) {
-      throw new Error('Android emulator or the AOSP system image is not installed on this node')
+      throw new Error('Android emulator or the configured Android system image is not installed on this node')
     }
     if (!(await avdExists(name))) await createAvd(device, name)
 

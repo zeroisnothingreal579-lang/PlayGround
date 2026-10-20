@@ -25,7 +25,10 @@ export const config = {
   provider,
   androidHome: process.env.ANDROID_HOME || process.env.ANDROID_SDK_ROOT || '',
   androidSerial: process.env.ANDROID_SERIAL || '',
-  avdImage: process.env.ANDROID_AVD_IMAGE || 'system-images;android-35;default;x86_64',
+  // Official Google Play image gives a fully functional Android with Play Store
+  // and Google Play Services. Set ANDROID_AVD_IMAGE to a `default` image for AOSP.
+  avdImage: process.env.ANDROID_AVD_IMAGE || 'system-images;android-35;google_apis_playstore;x86_64',
+  avdName: process.env.ANDROID_AVD_NAME || 'clouddroid_play',
   avdDevice: process.env.ANDROID_AVD_DEVICE || 'pixel_6',
   bootTimeoutMs: num(process.env.ANDROID_BOOT_TIMEOUT_MS, 300_000),
   maxRunning: num(process.env.ANDROID_MAX_RUNNING, 2),

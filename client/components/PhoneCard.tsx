@@ -106,7 +106,7 @@ export function PhoneCard({ device, busy, onStart, onStop, onRestart, onSettings
               {device.isDemo && <Badge tone="amber" className="shrink-0">Demo</Badge>}
             </div>
             <p className="mt-0.5 truncate text-[11px] text-zinc-500">
-              Android {device.androidVersion} · {device.profileName} · {device.gms ? 'GMS' : 'AOSP'}
+              Android {device.androidVersion} · {device.profileName} · {device.gms ? 'Google Play' : 'AOSP'}
             </p>
           </div>
           <button

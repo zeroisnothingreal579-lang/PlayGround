@@ -51,7 +51,7 @@ export default function AuthPage({ mode }: { mode: 'login' | 'register' }) {
           <Link to="/"><Logo /></Link>
           <div className="my-auto max-w-lg py-12">
             <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[11px] text-zinc-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" /> AOSP Android 15 · live runtime
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" /> Android 15 · live Google Play runtime
             </span>
             <h1 className="mt-6 font-display text-[44px] font-semibold leading-[1.05] tracking-[-0.03em] text-white xl:text-5xl">
               Your Android,<br /><span className="gradient-text">always on.</span>
@@ -62,7 +62,7 @@ export default function AuthPage({ mode }: { mode: 'login' | 'register' }) {
 
             <div className="mt-9 space-y-3">
               {[
-                ['Real AOSP instances', 'KVM-backed, streamed from the actual framebuffer'],
+                ['Real Android instances', 'KVM-backed, streamed from the actual framebuffer'],
                 ['Persistent workspace', 'Storage, settings and installed apps survive reboots'],
                 ['Private by default', 'Per-user ownership, one-time tickets, audit trail'],
               ].map(([title, detail]) => (

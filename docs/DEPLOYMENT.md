@@ -24,8 +24,11 @@ REDIS_URL=redis://redis:6379
 # Runtime
 CLOUDDROID_PROVIDER=emulator
 ANDROID_HOME=/opt/android-sdk
+ANDROID_AVD_IMAGE=system-images;android-35;google_apis_playstore;x86_64
+ANDROID_AVD_NAME=clouddroid_play
 ANDROID_MAX_RUNNING=4
-GMS_AVAILABLE=0
+# 1 = official Google Play image installed on this node
+GMS_AVAILABLE=1
 SEED_DEMO=false
 ```
 
@@ -58,14 +61,18 @@ require device passthrough:
 
 ```bash
 export ANDROID_HOME=/opt/android-sdk
-scripts/create-avd.sh clouddroid_demo 35
+scripts/create-avd.sh clouddroid_play 35
 adb devices
 ```
 
 - Give the host enough RAM: budget ~4 GB per concurrent emulator plus the app.
 - Prefer `-gpu swiftshader_indirect` on headless servers.
 - Keep `ANDROID_MAX_RUNNING` at or below what the host can sustain.
-- Persist `STORAGE_DIR` and the database; AVDs live under `$ANDROID_HOME`.
+- Persist `STORAGE_DIR` and the database; AVDs live under `$ANDROID_AVD_HOME`
+  (`~/.android/avd` or `~/.config/.android/avd`).
+- Google Play images are subject to Google's terms, including device
+  certification and licensing requirements. Use an official image you are
+  entitled to run; otherwise deploy the AOSP image with `GMS_AVAILABLE=0`.
 
 ## 4. Reverse proxy
 

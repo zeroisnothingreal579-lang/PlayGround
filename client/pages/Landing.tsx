@@ -81,7 +81,7 @@ function PhoneIllustration() {
                     </div>
                     <div className="text-right">
                       <p className="text-[9px] uppercase tracking-wider text-white/40">Android</p>
-                      <p className="text-[11px] font-medium text-white/90">15 · AOSP</p>
+                      <p className="text-[11px] font-medium text-white/90">15 · Android</p>
                     </div>
                   </div>
                 </div>
@@ -135,7 +135,7 @@ function PhoneIllustration() {
             <div className="grid h-7 w-7 place-items-center rounded-lg bg-iris-400/10 text-iris-300"><ShieldCheck className="h-3.5 w-3.5" /></div>
             <div>
               <p className="text-[9px] uppercase tracking-wider text-zinc-500">Boot verified</p>
-              <p className="text-xs font-medium text-white">Android 15 · AOSP</p>
+              <p className="text-xs font-medium text-white">Android 15</p>
             </div>
           </div>
         </div>
@@ -146,12 +146,12 @@ function PhoneIllustration() {
 }
 
 const features = [
-  { icon: Smartphone, title: 'Genuine Android', body: 'AOSP Android 15 boots on a KVM-backed virtual device. What you see is the real framebuffer, not a browser mockup.' },
+  { icon: Smartphone, title: 'Genuine Android', body: 'Android 15 boots on a KVM-backed virtual device. What you see is the real framebuffer, not a browser mockup.' },
   { icon: Zap, title: 'Low-latency streaming', body: 'Compressed frames stream over an authenticated WebSocket gateway. Input travels back through adb to the live instance.' },
   { icon: MousePointerClick, title: 'Complete control', body: 'Touch, drag, scroll, typing, navigation keys, volume, rotation and screenshots — all mapped to Android input events.' },
   { icon: FolderUp, title: 'Files & APKs', body: 'Upload from any tablet or laptop, copy into /sdcard/Download, and install signed APKs through Android’s package manager.' },
   { icon: Lock, title: 'Isolated by design', body: 'Each phone belongs to one account. Every API call and stream ticket is ownership-checked, short-lived, and rate limited.' },
-  { icon: ShieldCheck, title: 'Honest Google services', body: 'AOSP devices are labelled AOSP. Play Services appear only with a certified build and licensing — never an imitation login.' },
+  { icon: ShieldCheck, title: 'Real Google services', body: 'Official Google Play images include Play Store and Google Play Services. AOSP builds stay clearly labelled, and we never imitate Google sign-in.' },
 ]
 
 const steps = [
@@ -221,7 +221,7 @@ export default function LandingPage() {
             </div>
             <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] text-zinc-500">
               <span className="flex items-center gap-1.5"><Check className="h-3 w-3 text-emerald-400" /> No credit card</span>
-              <span className="flex items-center gap-1.5"><Check className="h-3 w-3 text-emerald-400" /> AOSP Android 15</span>
+              <span className="flex items-center gap-1.5"><Check className="h-3 w-3 text-emerald-400" /> {status?.gmsAvailable ? 'Android 15 · Google Play' : 'Android 15'}</span>
               <span className="flex items-center gap-1.5"><Check className="h-3 w-3 text-emerald-400" /> Data persists</span>
             </div>
           </div>
@@ -232,7 +232,7 @@ export default function LandingPage() {
       <section className="border-y border-white/[0.06] bg-white/[0.015]">
         <div className="mx-auto grid max-w-7xl grid-cols-2 divide-white/[0.06] px-5 sm:grid-cols-4 sm:divide-x sm:px-8">
           {[
-            { value: 'AOSP 15', label: 'Android image' },
+            { value: status?.gmsAvailable ? 'Play · 15' : 'Android 15', label: 'Android image' },
             { value: 'KVM', label: 'Hardware isolation' },
             { value: 'WebSocket', label: 'Frame transport' },
             { value: '< 100 ms', label: 'Input path target' },
@@ -299,7 +299,9 @@ export default function LandingPage() {
               </ul>
               <div className="mt-7 flex items-center gap-2 rounded-xl border border-amber-400/15 bg-amber-400/[0.04] p-3 text-[11px] leading-relaxed text-amber-200/80">
                 <ShieldCheck className="h-4 w-4 shrink-0" />
-                AOSP builds do not include Google Play Store or Play Services. Those appear only on certified, licensed images.
+                {status?.gmsAvailable
+                  ? 'This node runs the official Google Play system image, so Play Store and Google Play Services are available on the device.'
+                  : 'AOSP builds do not include Google Play Store or Play Services. Those appear only on official Google Play images.'}
               </div>
             </div>
 
@@ -310,7 +312,7 @@ export default function LandingPage() {
                   { icon: MonitorSmartphone, title: 'Browser client', sub: 'React · responsive workspace', tone: 'text-iris-300 border-iris-400/25 bg-iris-500/10', tag: 'TLS' },
                   { icon: Terminal, title: 'CloudDroid API', sub: 'Auth · plans · ownership · audit', tone: 'text-electric-300 border-electric-400/25 bg-electric-500/10', tag: 'REST + WS' },
                   { icon: Radio, title: 'Device gateway', sub: 'One-time tickets · input mapping', tone: 'text-fuchsia-300 border-fuchsia-400/25 bg-fuchsia-500/10', tag: 'WSS' },
-                  { icon: Server, title: 'Android runtime', sub: 'KVM-backed AOSP 15 · persistent userdata', tone: 'text-emerald-300 border-emerald-400/25 bg-emerald-500/10', tag: 'ADB' },
+                  { icon: Server, title: 'Android runtime', sub: `KVM-backed Android 15${status?.gmsAvailable ? ' · Google Play' : ''} · persistent userdata`, tone: 'text-emerald-300 border-emerald-400/25 bg-emerald-500/10', tag: 'ADB' },
                 ].map((node, index) => (
                   <div key={node.title}>
                     <div className="flex items-center gap-3 rounded-xl border border-white/[0.07] bg-ink-850/90 p-3.5 backdrop-blur">
@@ -419,8 +421,10 @@ export default function LandingPage() {
           <h2 className="font-display text-3xl font-semibold tracking-tight text-white sm:text-4xl">Questions, answered honestly.</h2>
           <div className="mt-8 divide-y divide-white/[0.07] border-y border-white/[0.07]">
             {[
-              ['Is this a real Android device?', 'Yes, when the runtime is live. CloudDroid boots an AOSP Android image on a KVM-backed emulator and streams its actual display. In this preview, devices marked DEMO are clearly labelled demo data and are not live.'],
-              ['Can I use the Google Play Store?', 'Only on a certified GMS build that this deployment is licensed to run. This node ships AOSP, so Play Store and Play Services are absent and labelled as such. We never imitate Google sign-in.'],
+              ['Is this a real Android device?', 'Yes, when the runtime is live. CloudDroid boots a real Android image on a KVM-backed emulator and streams its actual display. Devices marked DEMO are clearly labelled demo data and are not live.'],
+              ['Can I use the Google Play Store?', status?.gmsAvailable
+                ? 'Yes. This deployment runs the official Google Play system image, so Play Store, Google Play Services and Google sign-in are available inside the phone. You sign in directly with Google on the device.'
+                : 'Only on a deployment running an official Google Play image. This node ships AOSP, so Play Store and Play Services are absent and labelled as such. We never imitate Google sign-in.'],
               ['What happens to my apps and files?', 'The Android userdata image persists between stop and start. Deleting a phone destroys the instance, its AVD data and its stored files.'],
               ['How is the stream secured?', 'Every stream requires an authenticated, single-use ticket scoped to your user and phone. Production deployments terminate TLS and use WSS. Input is validated and rate limited.'],
             ].map(([question, answer], index) => (
@@ -442,7 +446,7 @@ export default function LandingPage() {
           <Sparkles className="mx-auto h-5 w-5 text-iris-300" />
           <h2 className="mt-4 font-display text-3xl font-semibold tracking-tight text-white sm:text-[40px]">Your Android is waiting.</h2>
           <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-zinc-400">
-            Open the demo workspace with a real AOSP phone, or create an account and provision your own.
+            Open the demo workspace with a real Android phone, or create an account and provision your own.
           </p>
           <div className="mt-7 flex flex-wrap justify-center gap-3">
             <Link to="/register"><Button variant="primary" size="lg">Create free account <ArrowRight className="h-4 w-4" /></Button></Link>
@@ -459,7 +463,7 @@ export default function LandingPage() {
             <a href="#product" className="hover:text-zinc-300">Product</a>
             <a href="#architecture" className="hover:text-zinc-300">Architecture</a>
             <a href="#pricing" className="hover:text-zinc-300">Pricing</a>
-            <span className="opacity-60">AOSP is a trademark of Google LLC.</span>
+            <span className="opacity-60">Android and Google Play are trademarks of Google LLC.</span>
           </div>
         </div>
       </footer>

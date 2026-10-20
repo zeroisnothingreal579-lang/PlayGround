@@ -2,9 +2,10 @@
 
 CloudDroid is a full-stack platform for creating, booting, streaming and
 managing **real cloud-hosted Android phones** from the browser. It provisions
-genuine AOSP emulator instances on KVM, streams the live framebuffer over an
+genuine Android emulator instances on KVM, streams the live framebuffer over an
 authenticated WebSocket and pushes touch, key and text input back into Android
-through `adb`.
+through `adb`. The default image is the official Google Play build, so phones
+include Play Store and Google Play Services.
 
 It is honest about its runtime: phones backed by a real Android instance are
 labelled **LIVE**, while seeded illustrative devices are labelled **DEMO** and
@@ -44,12 +45,17 @@ npm run build
 npm start                     # serves app + API on http://localhost:3000
 ```
 
-For a live runtime, install the Android SDK and an AOSP system image, then:
+For a live runtime, install the Android SDK and the official Google Play system
+image, then:
 
 ```bash
-scripts/create-avd.sh clouddroid_demo
+scripts/create-avd.sh clouddroid_play
 CLOUDDROID_PROVIDER=emulator npm start
 ```
+
+To run AOSP instead (no Play Store or Google Play Services), install
+`system-images;android-35;default;x86_64`, set
+`ANDROID_AVD_IMAGE`/`ANDROID_AVD_NAME` accordingly and set `GMS_AVAILABLE=0`.
 
 Open <http://localhost:3000> and sign in with the seeded demo account:
 

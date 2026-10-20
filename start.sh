@@ -24,8 +24,17 @@ timed() {
 
 cd "$PROJECT_DIR"
 export PORT
-export ANDROID_HOME="${ANDROID_HOME:-/home/runner/android-sdk}"
+if [ -z "${ANDROID_HOME:-}" ]; then
+  for candidate in /usr/local/lib/android/sdk /opt/android-sdk "$HOME/android-sdk"; do
+    if [ -d "$candidate" ]; then ANDROID_HOME="$candidate"; break; fi
+  done
+fi
+export ANDROID_HOME="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
 export ANDROID_SDK_ROOT="${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
+if [ -z "${ANDROID_AVD_HOME:-}" ]; then
+  if [ -d "$HOME/.config/.android/avd" ]; then export ANDROID_AVD_HOME="$HOME/.config/.android/avd"
+  elif [ -d "$HOME/.android/avd" ]; then export ANDROID_AVD_HOME="$HOME/.android/avd"; fi
+fi
 export PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
 
 # KVM is required for a usable hardware-accelerated Android emulator.

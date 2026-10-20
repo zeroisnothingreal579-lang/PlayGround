@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import {
@@ -37,14 +37,19 @@ export default function CreatePhonePage() {
   const [ramMb, setRamMb] = useState(4096)
   const [vcpu, setVcpu] = useState(2)
   const [storageGb, setStorageGb] = useState(32)
-  const [gms, setGms] = useState(false)
+  const [gms, setGms] = useState(true)
   const [submitting, setSubmitting] = useState(false)
+  const gmsInitialized = useRef(false)
 
   const profile = catalog?.profiles.find((item) => item.id === profileId) || catalog?.profiles[1]
   const version = catalog?.versions.find((item) => item.id === versionId) || catalog?.versions[0]
 
   useEffect(() => {
     if (!catalog) return
+    if (!gmsInitialized.current) {
+      setGms(catalog.gms.available)
+      gmsInitialized.current = true
+    }
     if (!profileId) setProfileId(catalog.profiles[1]?.id || catalog.profiles[0].id)
     if (!versionId && catalog.versions[0]) setVersionId(catalog.versions[0].id)
     const nextProfile = catalog.profiles.find((item) => item.id === profileId)
@@ -83,7 +88,7 @@ export default function CreatePhonePage() {
     try {
       const result = await post<{ device: Device }>('/devices', {
         name: name.trim(),
-        androidVersion: version.label,
+        androidVersion: version.label.replace(/^Android\s+/, '').split(' · ')[0],
         apiLevel: version.apiLevel,
         profileId: profileId,
         ramMb,
@@ -304,7 +309,7 @@ export default function CreatePhonePage() {
                       </div>
                       <div className="flex-1">
                         <p className="text-xs font-medium text-white">{item.label}</p>
-                        <p className="mt-0.5 text-[10px] text-zinc-500">API {item.apiLevel} · {item.gms ? 'Certified Google services' : 'AOSP · no Play Store or Play Services'}</p>
+                        <p className="mt-0.5 text-[10px] text-zinc-500">API {item.apiLevel} · {item.gms ? 'Google Play Store & Play Services included' : 'AOSP · no Play Store or Play Services'}</p>
                       </div>
                       {versionId === item.id && <Check className="h-4 w-4 text-iris-300" />}
                     </button>
@@ -327,7 +332,7 @@ export default function CreatePhonePage() {
                   {!catalog.gms.available && (
                     <div className="mt-3 flex items-start gap-2 rounded-lg border border-amber-400/15 bg-amber-500/[0.04] p-2.5 text-[10px] leading-relaxed text-amber-200/80">
                       <Info className="mt-0.5 h-3 w-3 shrink-0" />
-                      This device will be labelled <strong className="font-semibold">AOSP Android {version?.apiLevel === 35 ? '15' : ''}</strong>. Play Store and Google sign-in are not installed, and we never emulate them.
+                      This device will be labelled <strong className="font-semibold">AOSP Android {version?.apiLevel === 35 ? '15' : ''}</strong>. Google Play Store and Play Services are not installed on AOSP builds.
                     </div>
                   )}
                 </div>
@@ -360,7 +365,7 @@ export default function CreatePhonePage() {
                       ['Memory', `${formatGbFromMb(ramMb)} · ${vcpu} vCPU`],
                       ['Storage', `${storageGb} GB`],
                       ['Region', 'Local runtime'],
-                      ['Google', gms ? 'Certified GMS' : 'AOSP · no GMS'],
+                      ['Google', gms ? 'Google Play · GMS' : 'AOSP · no GMS'],
                       ['Provider', catalog.runtime.provider],
                     ].map(([label, value]) => (
                       <div key={label} className="rounded-lg border border-white/[0.06] bg-ink-900/60 p-2.5">
@@ -374,7 +379,7 @@ export default function CreatePhonePage() {
                 <div className={cn('rounded-xl border p-3.5', demoRuntime ? 'border-amber-400/20 bg-amber-500/[0.05]' : 'border-emerald-400/15 bg-emerald-500/[0.04]')}>
                   <p className="flex items-center gap-2 text-[11px] font-medium text-zinc-200">
                     {demoRuntime ? <TriangleAlert className="h-3.5 w-3.5 text-amber-300" /> : <Sparkles className="h-3.5 w-3.5 text-emerald-300" />}
-                    {demoRuntime ? 'Created as clearly-labelled demo data' : 'Ready to boot on a real AOSP runtime'}
+                    {demoRuntime ? 'Created as clearly-labelled demo data' : catalog.gms.available ? 'Ready to boot a real Android with Google Play' : 'Ready to boot on a real AOSP runtime'}
                   </p>
                   <p className="mt-1 text-[10px] leading-relaxed text-zinc-500">
                     {demoRuntime
@@ -422,7 +427,7 @@ export default function CreatePhonePage() {
                 ['Memory', `${formatGbFromMb(ramMb)} RAM`],
                 ['CPU', `${vcpu} vCPU`],
                 ['Storage', `${storageGb} GB`],
-                ['Google services', gms ? 'GMS' : 'AOSP'],
+                ['Google services', gms ? 'Google Play · GMS' : 'AOSP'],
               ].map(([label, value]) => (
                 <div key={label} className="flex items-start justify-between gap-4">
                   <span className="text-zinc-500">{label}</span>

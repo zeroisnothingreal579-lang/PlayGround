@@ -55,17 +55,16 @@ export function systemImageAvailable() {
 
 export function catalogFor(hasGms: boolean) {
   return {
-    versions: [
-      { id: 'android-15-aosp', label: 'Android 15 · AOSP', apiLevel: 35, gms: false },
-      ...(hasGms ? [{ id: 'android-14-gms', label: 'Android 14 · Google certified', apiLevel: 34, gms: true }] : []),
-    ],
+    versions: hasGms
+      ? [{ id: 'android-15-gms', label: 'Android 15 · Google Play', apiLevel: 35, gms: true }]
+      : [{ id: 'android-15-aosp', label: 'Android 15 · AOSP', apiLevel: 35, gms: false }],
     profiles: PROFILES,
     regions: [{ id: 'local', label: 'Local runtime · low latency', available: true }],
     gms: {
       available: hasGms,
       reason: hasGms
-        ? 'Certified GMS image detected and licensed for this deployment.'
-        : 'No certified Google Mobile Services image is licensed on this node. AOSP builds do not include Play Store or Play Services.',
+        ? 'Official Google Play system image detected. Play Store, Google Play Services and Google sign-in are available on the device.'
+        : 'No Google Play system image is installed on this node. AOSP builds do not include Play Store or Play Services.',
     },
     storageOptions: STORAGE_OPTIONS,
   }

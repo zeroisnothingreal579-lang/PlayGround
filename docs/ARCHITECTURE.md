@@ -64,7 +64,10 @@ different devices are handled without hard-coded dimensions.
 The capture path is real (`adb` screencap + input injection). Frame rate is
 bounded by emulator screenshot latency on a software-rendered headless host;
 the UI surfaces this honestly as the stream quality indicator rather than hiding
-it. `GMS_AVAILABLE` defaults to `0`, so devices are labelled **AOSP · no GMS**.
+it. With the official Google Play image installed, set `GMS_AVAILABLE=1` and
+devices are labelled **Google Play · GMS**; AOSP images are labelled
+**AOSP · no GMS**. CloudDroid never imitates Google services — Play Store and
+sign-in run inside the real image.
 
 ## Data model
 

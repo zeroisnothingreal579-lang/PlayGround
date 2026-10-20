@@ -39,25 +39,28 @@ Relevant variables:
 
 ```dotenv
 CLOUDDROID_PROVIDER=emulator
-ANDROID_HOME=/home/runner/android-sdk
-ANDROID_AVD_IMAGE=system-images;android-35;default;x86_64
+ANDROID_HOME=/usr/local/lib/android/sdk
+ANDROID_AVD_IMAGE=system-images;android-35;google_apis_playstore;x86_64
+ANDROID_AVD_NAME=clouddroid_play
 ANDROID_AVD_DEVICE=pixel_6
+ANDROID_AVD_HOME=/home/runner/.config/.android/avd
 ANDROID_MAX_RUNNING=2
-GMS_AVAILABLE=0
+GMS_AVAILABLE=1
 ```
 
 ## 4. Install the Android SDK (live mode)
 
 ```bash
-export ANDROID_HOME="$HOME/android-sdk"
-scripts/create-avd.sh clouddroid_demo
+export ANDROID_HOME=/usr/local/lib/android/sdk
+scripts/create-avd.sh clouddroid_play
 ```
 
-The script installs `platform-tools`, `emulator` and the system image, then
-creates the `clouddroid_demo` AVD. Boot it manually to confirm KVM works:
+The script installs `platform-tools`, `emulator` and the official Google Play
+system image, then creates the `clouddroid_play` AVD. Boot it manually to
+confirm KVM works:
 
 ```bash
-emulator -avd clouddroid_demo -no-window -no-audio -no-boot-anim \
+emulator -avd clouddroid_play -no-window -no-audio -no-boot-anim \
   -gpu swiftshader_indirect -port 5554 &
 adb wait-for-device
 adb shell getprop sys.boot_completed   # prints 1 when booted

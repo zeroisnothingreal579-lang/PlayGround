@@ -1,11 +1,12 @@
 import { db } from './db.js'
+import { config } from './config.js'
 import { hashPassword, id, nowIso, currentPeriod } from './util.js'
 
 const PLANS = [
   {
     id: 'free', name: 'Free trial', tagline: 'Try a real cloud phone', priceCents: 0,
     maxDevices: 1, maxConcurrent: 1, storageMb: 5120, vcpu: 2, ramMb: 4096, monthlyHours: 10,
-    features: ['1 cloud phone', '10 hours / month', '5 GB storage', 'AOSP Android 15', 'File transfer'],
+    features: ['1 cloud phone', '10 hours / month', '5 GB storage', 'Android 15', 'File transfer'],
   },
   {
     id: 'basic', name: 'Basic', tagline: 'For personal projects', priceCents: 1200,
@@ -60,8 +61,8 @@ async function seedDevices(userId: string) {
   const devices = [
     {
       id: 'd_aurora_live', name: 'Aurora One', android: '15', api: 35, profile: 'pixel_6', profileName: 'Pixel 6',
-      resolution: '1080 × 2400', ram: 4096, vcpu: 2, storage: 32, region: 'local', gms: 0,
-      provider: 'emulator', demo: 0, avd: 'clouddroid_demo',
+      resolution: '1080 × 2400', ram: 4096, vcpu: 2, storage: 32, region: 'local', gms: config.gmsAvailable ? 1 : 0,
+      provider: 'emulator', demo: 0, avd: config.avdName,
     },
     {
       id: 'd_nebula_demo', name: 'Nebula Mini', android: '15', api: 35, profile: 'pixel_5', profileName: 'Pixel 5',
