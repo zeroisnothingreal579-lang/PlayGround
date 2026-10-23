@@ -1,0 +1,6 @@
+# One code per line. Blank lines and lines starting with # are ignored.
+# A CSV export works too: the first column is used, so "code,url" is fine.
+# Copy to codes.txt and point CODES_FILE=../codes.txt at it.
+abc123
+def456
+xyz789

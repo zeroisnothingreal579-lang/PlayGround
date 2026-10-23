@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Redirect-heavy k6 load, stress, and spike tests for URL shorteners you own.">
+  <title>PlayGround — Shortener Load Test Kit</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="aurora" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="mark" aria-hidden="true">PG</span>
+      <span class="brand-name">PlayGround</span>
+      <span class="slash">/</span>
+      <span class="crumb">Load Test Kit</span>
+    </div>
+    <a class="repo-link" href="https://github.com/zeroisnothingreal579-lang/PlayGround" target="_blank" rel="noreferrer">
+      Repository <span aria-hidden="true">↗</span>
+    </a>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow"><span class="pulse" aria-hidden="true"></span> k6 &middot; 1,000+ virtual users</span>
+        <h1>Break your shortener<br><span class="accent">before traffic does.</span></h1>
+        <p class="lede">
+          Redirect-heavy load, stress, and spike tests for URL shorteners you own.
+          Repeatable profiles, real p95 thresholds, and a CI job that fails when the
+          redirect path slows down.
+        </p>
+        <div class="cta-row">
+          <a class="button primary" href="#run">Run a profile</a>
+          <a class="button secondary" href="#measure">What it measures</a>
+        </div>
+        <ul class="hero-notes">
+          <li>No destination page loads</li>
+          <li>Every request tagged <code>X-Load-Test: k6</code></li>
+          <li>Geo-matrix ready for self-hosted runners</li>
+        </ul>
+      </div>
+
+      <aside class="terminal" aria-label="Example k6 command">
+        <div class="terminal-bar">
+          <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span id="terminal-title">load profile</span>
+          <span class="terminal-chip">k6</span>
+        </div>
+        <pre class="terminal-body"><code id="command">BASE_URL=https://short.example.com \
+PROFILE=load k6 run loadtest/k6/redirect.js</code></pre>
+        <div class="terminal-foot">
+          <span id="terminal-meta">1,000 VUs &middot; 8m total</span>
+          <button id="copy-command" type="button">Copy</button>
+        </div>
+      </aside>
+    </section>
+
+    <section class="stats" aria-label="Key numbers">
+      <article class="stat">
+        <span class="stat-label">Peak virtual users</span>
+        <strong>1,000</strong>
+        <span class="stat-note">load profile default</span>
+      </article>
+      <article class="stat">
+        <span class="stat-label">p95 target</span>
+        <strong>400<span class="unit">ms</span></strong>
+        <span class="stat-note">302 response, no redirects followed</span>
+      </article>
+      <article class="stat">
+        <span class="stat-label">Error budget</span>
+        <strong>1<span class="unit">%</span></strong>
+        <span class="stat-note">non-2xx/3xx fails the run</span>
+      </article>
+      <article class="stat">
+        <span class="stat-label">Destinations loaded</span>
+        <strong>0</strong>
+        <span class="stat-note">target site and ads never fetched</span>
+      </article>
+    </section>
+
+    <section id="run" class="panel">
+      <div class="panel-head">
+        <div>
+          <span class="kicker">Scenarios</span>
+          <h2>Pick a load profile</h2>
+        </div>
+        <p>Ramp up, hold, recover. Override with <code>VUS</code> and <code>DURATION</code>.</p>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Load profiles">
+        <button class="tab" role="tab" data-profile="smoke" aria-selected="false" type="button">Smoke</button>
+        <button class="tab" role="tab" data-profile="load" aria-selected="true" type="button">Load</button>
+        <button class="tab" role="tab" data-profile="stress" aria-selected="false" type="button">Stress</button>
+        <button class="tab" role="tab" data-profile="spike" aria-selected="false" type="button">Spike</button>
+      </div>
+
+      <div class="profile-body">
+        <div class="fact">
+          <span>Peak VUs</span>
+          <strong id="profile-vus">1,000</strong>
+        </div>
+        <div class="fact">
+          <span>Shape</span>
+          <strong id="profile-shape">2m up &middot; 5m hold &middot; 1m down</strong>
+        </div>
+        <div class="fact">
+          <span>Best for</span>
+          <strong id="profile-use">Expected peak traffic</strong>
+        </div>
+      </div>
+
+      <p class="panel-note">
+        The script exits non-zero when a threshold is crossed, so the same
+        profile works locally and in the GitHub Actions matrix.
+      </p>
+    </section>
+
+    <section id="measure" class="panel">
+      <div class="panel-head">
+        <div>
+          <span class="kicker">Observability</span>
+          <h2>What it measures</h2>
+        </div>
+        <p>Metrics are tagged with <code>REGION</code> so runs stay comparable.</p>
+      </div>
+
+      <div class="measure-grid">
+        <article>
+          <h3>Redirect latency</h3>
+          <p>Time to serve the 302 itself. The destination is never fetched.</p>
+          <code class="metric">shortener_redirect_ms</code>
+        </article>
+        <article>
+          <h3>Simulated views</h3>
+          <p>Successful redirects, counted separately from failed lookups.</p>
+          <code class="metric">shortener_views</code>
+        </article>
+        <article>
+          <h3>Failed requests</h3>
+          <p>Non-2xx/3xx responses. A stale code shows up as a miss, not a view.</p>
+          <code class="metric">http_req_failed</code>
+        </article>
+        <article>
+          <h3>Protocol checks</h3>
+          <p>302 status plus a present <code>Location</code> header on every redirect.</p>
+          <code class="metric">checks</code>
+        </article>
+      </div>
+    </section>
+
+    <section class="safety">
+      <div class="shield" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z"/>
+          <path d="M9.5 12.2l1.8 1.8 3.4-3.6"/>
+        </svg>
+      </div>
+      <div>
+        <h2>Authorized targets only</h2>
+        <p>
+          Point this at infrastructure you own or have written permission to test.
+          Generating views or impressions on third-party shorteners and ad networks
+          is fraud, not load testing. Traffic is labelled so analytics and bot
+          filters can exclude it.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>PlayGround &middot; shortener load-test kit</span>
+    <span>k6 &middot; profiles, thresholds, geo matrix</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
