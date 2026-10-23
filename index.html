@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#080a0d" />
+  <meta name="description" content="OpenForge OS — a local AI dev workspace with Codex, Claude Code, OpenCode, skills, files and a terminal, powered by your OpenRouter key." />
+  <title>OpenForge OS — your local AI dev workspace</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b0d10'/%3E%3Cpath d='M9 22V10h5.4c3.2 0 5.1 1.7 5.1 4.4 0 2.2-1.2 3.7-3.2 4.2l3.7 3.4h-3.6l-3.3-3.1h-1v3.1H9Zm3.1-5.7h2.1c1.5 0 2.3-.7 2.3-1.9 0-1.2-.8-1.9-2.3-1.9h-2.1v3.8Z' fill='%23f5a524'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app" id="app">
+    <aside class="sidebar" id="sidebar" aria-label="Navigation">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 18V6h5.2c3 0 4.8 1.6 4.8 4.2 0 2.1-1.1 3.5-3 4l3.5 3.8h-3.4L8 14.8H7V18H4Z" fill="currentColor"/><circle cx="18" cy="7" r="2" fill="currentColor" opacity=".55"/></svg>
+        </div>
+        <div class="brand-text"><strong>OpenForge<span class="brand-os">OS</span></strong><span>local AI dev workspace</span></div>
+        <button class="icon-btn sidebar-close" id="sidebarClose" aria-label="Close menu">
+          <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+      <nav class="app-nav" id="appNav" aria-label="Views">
+        <button class="nav-item active" data-view="dashboard">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
+          <span>Dashboard</span><span class="nav-key">1</span>
+        </button>
+        <button class="nav-item" data-view="chat">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M20 15a3 3 0 0 1-3 3H8l-4 3V7a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          <span>Chat</span><span class="nav-badge" id="navChatCount" hidden>0</span><span class="nav-key">2</span>
+        </button>
+        <button class="nav-item" data-view="skills">
+          <svg viewBox="0 0 24 24" fill="none"><path d="m12 3 2.3 5.2 5.7.5-4.3 3.8 1.3 5.5-5-3-5 3 1.3-5.5L4 8.7l5.7-.5L12 3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          <span>Skills</span><span class="nav-badge" id="navSkillCount" hidden>0</span><span class="nav-key">3</span>
+        </button>
+        <button class="nav-item" data-view="workspace">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M3.5 7.5A2.5 2.5 0 0 1 6 5h3l2 2h7a2.5 2.5 0 0 1 2.5 2.5v7A2.5 2.5 0 0 1 18 19H6a2.5 2.5 0 0 1-2.5-2.5v-9Z" stroke="currentColor" stroke-width="1.6"/></svg>
+          <span>Workspace</span><span class="nav-key">4</span>
+        </button>
+        <button class="nav-item" data-view="terminal">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4.5" width="18" height="15" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="m7 9 3 3-3 3M12.5 15H17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Terminal</span><span class="nav-key">5</span>
+        </button>
+      </nav>
+
+      <button class="new-chat" id="newChatBtn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span>New chat</span>
+        <kbd>⌘K</kbd>
+      </button>
+
+      <div class="sidebar-sessions">
+        <div class="sidebar-sessions-head"><span>Recent chats</span><span id="sessionCount">0</span></div>
+        <div class="sidebar-search">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.6"/><path d="m16 16 4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <input id="chatSearch" type="search" placeholder="Search chats" aria-label="Search chats" autocomplete="off" />
+        </div>
+        <nav class="chat-list" id="chatList" aria-label="Saved chats"></nav>
+      </div>
+
+      <div class="sidebar-foot">
+        <button class="account-card" id="keyBtn">
+          <span class="status-dot" id="statusDot" aria-hidden="true"></span>
+          <span class="account-copy">
+            <strong id="accountTitle">Connect OpenRouter</strong>
+            <span id="accountSub">Bring your own key</span>
+          </span>
+          <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round"/></svg>
+        </button>
+        <div class="storage-row"><span>Local storage</span><span id="storageUse">—</span></div>
+        <div class="storage-bar" aria-hidden="true"><i id="storageBar"></i></div>
+      </div>
+    </aside>
+
+    <div class="backdrop" id="backdrop" hidden></div>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open menu">
+          <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </button>
+
+        <div class="topbar-heading">
+          <span id="viewTitle">Dashboard</span>
+          <span class="topbar-sub" id="viewSub">Your local AI dev workspace</span>
+        </div>
+
+        <div class="topbar-right">
+          <button class="agent-pill" id="agentBtn" aria-haspopup="dialog" aria-expanded="false" title="Switch agent">
+            <span class="agent-pill-dot" id="agentDot"></span>
+            <span id="agentName">Codex</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round"/></svg>
+          </button>
+          <button class="model-pill" id="modelBtn" aria-haspopup="dialog" aria-expanded="false">
+            <span class="model-pill-dot" aria-hidden="true"></span>
+            <span id="modelName">Loading models…</span>
+            <span class="free-badge">FREE</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round"/></svg>
+          </button>
+          <button class="icon-btn" id="settingsBtn" aria-label="Settings">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 8.6 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 8.6a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3a2 2 0 1 1 4 0v.1A1.7 1.7 0 0 0 15.4 4.6a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9c.1.37.33.7.64.95.3.24.68.37 1.06.37H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5.68Z" stroke="currentColor" stroke-width="1.25" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="view-stack" id="viewStack">
+        <section class="view active" id="view-dashboard" data-view-panel="dashboard">
+          <div class="page-scroll dashboard">
+            <section class="dash-hero">
+              <div class="eyebrow" id="dashEyebrow"><span class="live-dot"></span> <span id="dashEyebrowText">OpenForge OS · bring your own OpenRouter key</span></div>
+              <h1>Your AI dev partner.<br /><span>Ready to ship.</span></h1>
+              <p class="lede">Codex, Claude Code, OpenCode and more — powered by free OpenRouter models, with a local workspace and terminal. Your key, files and chats never leave this browser.</p>
+              <form class="dash-form" id="dashForm">
+                <textarea id="dashInput" rows="2" placeholder="Describe what you want to build…" spellcheck="false"></textarea>
+                <div class="dash-form-bar">
+                  <div class="dash-chips">
+                    <button type="button" class="chip" data-prompt="Build a production-ready REST API in Node.js with validation, tests, and Docker.">REST API</button>
+                    <button type="button" class="chip" data-prompt="Review my project for security bugs and show me the fixes with diffs.">Security review</button>
+                    <button type="button" class="chip" data-prompt="Create a landing page for my app with clean responsive HTML and CSS.">Landing page</button>
+                    <button type="button" class="chip" data-prompt="Explain this codebase and draw a simple architecture diagram in markdown.">Explain code</button>
+                  </div>
+                  <button class="send-btn" type="submit" id="dashSend" aria-label="Start chat">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M12 5l-6 6M12 5l6 6" stroke="currentColor" stroke-width="1.9" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                </div>
+              </form>
+            </section>
+
+            <div class="stat-row" id="statRow"></div>
+
+            <section class="dash-section">
+              <div class="section-head">
+                <div><h2>Agents</h2><p>Specialized coding personalities. One free model pool.</p></div>
+                <button class="text-btn" data-goto="chat">Open chat →</button>
+              </div>
+              <div class="agent-grid" id="agentGrid"></div>
+            </section>
+
+            <div class="dash-columns">
+              <section class="dash-section">
+                <div class="section-head">
+                  <div><h2>Skills</h2><p>Prompt add-ons your agents can use.</p></div>
+                  <button class="text-btn" data-goto="skills">All skills →</button>
+                </div>
+                <div class="skill-strip" id="dashSkills"></div>
+              </section>
+              <section class="dash-section">
+                <div class="section-head">
+                  <div><h2>Recent sessions</h2><p>Pick up where you left off.</p></div>
+                  <button class="text-btn" data-goto="chat">All chats →</button>
+                </div>
+                <div class="recent-list" id="dashRecent"></div>
+              </section>
+            </div>
+
+            <section class="system-card" id="systemCard"></section>
+          </div>
+        </section>
+
+        <section class="view view-chat" id="view-chat" data-view-panel="chat">
+          <section class="chat-scroll" id="chatScroll">
+            <div class="welcome" id="welcome">
+              <div class="welcome-inner">
+                <div class="eyebrow"><span class="live-dot"></span> <span id="welcomeAgent">Codex · free models</span></div>
+                <h1>Talk to your<br /><span>coding agent.</span></h1>
+                <p class="lede">Pick an agent, add a skill, and start building. Every request goes straight from your browser to OpenRouter.</p>
+                <div class="welcome-actions">
+                  <button class="primary-btn" id="connectBtn">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7V5a3 3 0 0 1 3-3v0a3 3 0 0 1 3 3v2M7 9h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M12 13v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                    <span id="connectBtnText">Connect OpenRouter key</span>
+                  </button>
+                  <button class="ghost-btn" id="browseModelsBtn">Browse free models</button>
+                </div>
+                <div class="quick-grid" id="quickGrid">
+                  <button class="quick-card" data-prompt="Build a REST API in Node.js with Express, including validation, error handling, and tests. Show the full file contents.">
+                    <span class="quick-icon">API</span><strong>Build a REST API</strong><span>Node, Express, tests</span>
+                  </button>
+                  <button class="quick-card" data-prompt="Debug this stack trace and explain the root cause. Ask me to paste the trace and the relevant source if you need it.">
+                    <span class="quick-icon">BUG</span><strong>Debug a stack trace</strong><span>Find the root cause</span>
+                  </button>
+                  <button class="quick-card" data-prompt="Review this code for security issues, race conditions, and missing edge cases. Give me a prioritized list with concrete fixes.">
+                    <span class="quick-icon">SEC</span><strong>Review my code</strong><span>Security and edge cases</span>
+                  </button>
+                  <button class="quick-card" data-prompt="Explain how a modern web app handles authentication end to end, from login to session refresh. Use a simple diagram and concrete code.">
+                    <span class="quick-icon">DOC</span><strong>Explain a system</strong><span>Diagrams and examples</span>
+                  </button>
+                </div>
+                <p class="fineprint">Free models are rate-limited by OpenRouter and require Model Training + Logging enabled in your OpenRouter privacy settings. There is no unlimited GPU — inference runs on OpenRouter's free pool and everything else stays in this browser.</p>
+              </div>
+            </div>
+            <div class="messages" id="messages" aria-live="polite"></div>
+          </section>
+
+          <div class="composer-wrap">
+            <div class="chat-alert" id="chatAlert" hidden></div>
+            <form class="composer" id="composer">
+              <textarea id="input" rows="1" placeholder="Ask Codex to build, debug, or explain code…" aria-label="Message" spellcheck="false"></textarea>
+              <div class="composer-bar">
+                <div class="composer-meta">
+                  <span class="mode-hint" id="modeHint">Codex</span>
+                  <span class="dot">·</span>
+                  <span class="model-hint" id="modelHint">Free model</span>
+                  <span class="dot skill-sep" id="skillSep" hidden>·</span>
+                  <span class="skill-hint" id="skillHint" hidden></span>
+                </div>
+                <div class="composer-actions">
+                  <button type="button" class="stop-btn" id="stopBtn" hidden><span class="stop-square"></span> Stop</button>
+                  <button type="submit" class="send-btn" id="sendBtn" aria-label="Send message" disabled>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M12 5l-6 6M12 5l6 6" stroke="currentColor" stroke-width="1.9" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                </div>
+              </div>
+            </form>
+            <div class="composer-note">
+              <span><kbd>Enter</kbd> send</span><span class="sep">·</span>
+              <span><kbd>Shift</kbd>+<kbd>Enter</kbd> newline</span><span class="sep">·</span>
+              <span id="privacyNote">Chats stay in this browser</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="view-skills" data-view-panel="skills">
+          <div class="page-scroll">
+            <div class="page-head">
+              <div>
+                <div class="eyebrow">Skills</div>
+                <h1>Skills &amp; apps</h1>
+                <p>Install skills that shape how your agents work. Enabled skills are added to every new chat and can be combined.</p>
+              </div>
+              <button class="ghost-btn small" id="skillsDisable" type="button">Disable all</button>
+            </div>
+            <div class="skill-toolbar">
+              <span id="skillSummary">Loading…</span>
+              <span>Saved in this browser</span>
+            </div>
+            <div class="skills-grid" id="skillsGrid"></div>
+          </div>
+        </section>
+
+        <section class="view" id="view-workspace" data-view-panel="workspace">
+          <div class="workspace">
+            <aside class="file-panel">
+              <div class="panel-head">
+                <div><span class="panel-kicker">Workspace</span><strong>Files</strong></div>
+                <button class="icon-btn" id="newFileBtn" aria-label="New file" title="New file">
+                  <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                </button>
+              </div>
+              <form class="new-file-form" id="newFileForm" hidden>
+                <input id="newFileInput" placeholder="src/component.js" autocomplete="off" spellcheck="false" />
+              </form>
+              <div class="file-list" id="fileList"></div>
+              <div class="file-tip">Attach any file to an agent with “Ask agent”. Files are saved locally.</div>
+            </aside>
+            <section class="editor-panel">
+              <div class="editor-bar">
+                <div class="editor-file"><span class="file-icon">JS</span><span id="editorName">README.md</span></div>
+                <div class="editor-actions">
+                  <span class="save-state" id="saveState">Saved</span>
+                  <button class="ghost-btn tiny" id="askFileBtn" type="button">Ask agent</button>
+                  <button class="icon-btn danger-hover" id="deleteFileBtn" aria-label="Delete file" title="Delete file">
+                    <svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7m2 0-.7 12a1.5 1.5 0 0 1-1.5 1.4H9.2a1.5 1.5 0 0 1-1.5-1.4L7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  </button>
+                </div>
+              </div>
+              <textarea class="file-editor" id="fileEditor" spellcheck="false" aria-label="File contents"></textarea>
+              <div class="editor-foot"><span id="editorStats">0 lines · 0 chars</span><span>Saved in this browser</span></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="view-terminal" data-view-panel="terminal">
+          <div class="terminal-shell">
+            <div class="terminal-head">
+              <div class="term-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+              <span>openforge shell — browser workspace</span>
+              <button class="text-btn" id="termClear" type="button">Clear</button>
+            </div>
+            <div class="term-output" id="termOutput" aria-live="polite"></div>
+            <form class="term-form" id="termForm">
+              <span class="term-prompt">~/workspace $</span>
+              <input id="termInput" autocomplete="off" spellcheck="false" aria-label="Terminal command" />
+            </form>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="popover agent-popover" id="agentPopover" role="dialog" aria-label="Choose an agent" hidden>
+    <div class="popover-head"><strong>Choose an agent</strong><span class="popover-note">All agents use your selected model</span></div>
+    <div class="agent-list" id="agentList"></div>
+  </div>
+
+  <div class="popover" id="modelPopover" role="dialog" aria-label="Choose a model" hidden>
+    <div class="popover-head">
+      <div class="popover-search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.6"/><path d="m16 16 4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <input id="modelSearch" type="search" placeholder="Search models" aria-label="Search models" autocomplete="off" />
+      </div>
+      <label class="toggle-row compact"><input type="checkbox" id="freeOnly" checked /><span class="toggle"></span><span>Free only</span></label>
+    </div>
+    <div class="model-list" id="modelList"></div>
+    <div class="popover-foot"><span id="modelCount">—</span><button class="text-btn" id="refreshModels" type="button">Refresh list</button></div>
+  </div>
+
+  <div class="modal" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" hidden>
+    <div class="modal-card">
+      <div class="modal-head">
+        <div><h2 id="settingsTitle">Settings</h2><p>Your key, model, skills and data — all local.</p></div>
+        <button class="icon-btn" id="settingsClose" aria-label="Close settings">
+          <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+      <form id="keyForm" class="modal-section">
+        <div class="section-title"><span class="step">1</span><div><h3>OpenRouter API key</h3><p>Required to run agents.</p></div></div>
+        <label class="field">
+          <span class="field-label">API key</span>
+          <span class="input-wrap">
+            <input id="apiKeyInput" type="password" placeholder="sk-or-v1-…" autocomplete="off" spellcheck="false" />
+            <button class="reveal-btn" type="button" id="revealKey" aria-label="Show API key">
+              <svg viewBox="0 0 24 24"><path d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+            </button>
+          </span>
+        </label>
+        <div class="key-actions">
+          <button class="primary-btn small" type="submit" id="saveKeyBtn">Validate &amp; save</button>
+          <button class="ghost-btn small" type="button" id="testBtn">Test model</button>
+          <a class="text-link" href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer">Get a free key ↗</a>
+        </div>
+        <div class="key-status" id="keyStatus" hidden></div>
+        <div class="key-status" id="testResult" hidden></div>
+        <p class="hint">Stored in this browser only and sent directly to openrouter.ai — never to us. Leave empty and save to disconnect.</p>
+      </form>
+
+      <div class="modal-section">
+        <div class="section-title"><span class="step">2</span><div><h3>Free model setup</h3><p>OpenRouter blocks free models until these are set.</p></div></div>
+        <div class="setup-card">
+          <ol>
+            <li>Open <a href="https://openrouter.ai/settings/privacy" target="_blank" rel="noopener noreferrer">Privacy settings</a> and enable <strong>Model Training</strong> and <strong>Logging</strong> for API.</li>
+            <li>Turn <strong>ZDR-only</strong> off, then <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer">regenerate your key</a> if the error persists.</li>
+            <li>Free models are rate-limited. With $10+ credits, the daily limit is much higher.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="section-title"><span class="step">3</span><div><h3>Model</h3><p>Free models are rate-limited by OpenRouter.</p></div></div>
+        <label class="toggle-row"><input type="checkbox" id="freeOnlySetting" checked /><span class="toggle"></span><span>Show free models only</span></label>
+        <div class="current-model" id="currentModelRow"><span>Active</span><strong id="settingsModelName">—</strong></div>
+        <p class="hint">The “Free Models Router” auto-routes to an available free model. If one model fails, OpenForge also retries the next best free model automatically.</p>
+      </div>
+
+      <div class="modal-section">
+        <div class="section-title"><span class="step">4</span><div><h3>Your data</h3><p id="chatStats">No chats yet.</p></div></div>
+        <div class="data-actions">
+          <button class="ghost-btn small" id="exportBtn" type="button">Export everything</button>
+          <button class="ghost-btn small" id="importBtn" type="button">Import backup</button>
+          <input type="file" id="importFile" accept="application/json,.json" hidden />
+          <button class="danger-btn small" id="clearBtn" type="button">Erase all chats</button>
+        </div>
+        <p class="hint">Chats, files and skills live in this browser. Export a backup before clearing site data.</p>
+      </div>
+
+      <div class="modal-foot"><span>OpenForge OS · BYOK client for OpenRouter</span><span>v2.0</span></div>
+    </div>
+  </div>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
