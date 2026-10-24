@@ -1,0 +1,245 @@
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/jetbrains-mono';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --sidebar-w: 256px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply min-h-screen bg-ink-950 font-sans text-ink-100 antialiased;
+    background-image:
+      radial-gradient(ellipse 90% 55% at 18% -12%, rgba(112, 37, 245, 0.17), transparent 60%),
+      radial-gradient(ellipse 65% 45% at 100% 0%, rgba(84, 230, 177, 0.045), transparent 55%),
+      linear-gradient(180deg, #09090e 0%, #08080c 60%, #09090f 100%);
+    background-attachment: fixed;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.15;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.024) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.024) 1px, transparent 1px);
+    background-size: 52px 52px;
+    mask-image: linear-gradient(to bottom, black, transparent 70%);
+    z-index: 0;
+  }
+
+  ::selection {
+    background: rgba(129, 71, 255, 0.45);
+    color: white;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #29293d;
+    border-radius: 999px;
+    border: 2px solid #0b0b11;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #38384f;
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+  }
+
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer components {
+  .shell-grid {
+    display: grid;
+    grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+    min-height: 100vh;
+  }
+
+  .panel {
+    @apply relative overflow-hidden rounded-2xl border border-white/[0.065] bg-ink-850/80 shadow-panel backdrop-blur-xl;
+  }
+
+  .panel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    background: linear-gradient(140deg, rgba(255, 255, 255, 0.028), transparent 38%);
+  }
+
+  .panel-flat {
+    @apply rounded-2xl border border-white/[0.06] bg-ink-850/65;
+  }
+
+  .panel-hover {
+    @apply transition-all duration-300 hover:border-violet-500/20 hover:bg-ink-800/80;
+  }
+
+  .btn {
+    @apply inline-flex select-none items-center justify-center gap-2 whitespace-nowrap rounded-xl px-3.5 py-2 text-[13px] font-medium transition-all duration-200 disabled:pointer-events-none disabled:opacity-40;
+  }
+
+  .btn-primary {
+    @apply btn relative bg-violet-600 text-white shadow-[0_10px_30px_-12px_rgba(112,37,245,.8)] hover:bg-violet-500 active:scale-[.985];
+    background-image: linear-gradient(140deg, #8b5cff 0%, #6f20f4 100%);
+  }
+
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    pointer-events: none;
+  }
+
+  .btn-secondary {
+    @apply btn border border-white/[0.07] bg-white/[0.035] text-ink-100 hover:border-white/[0.13] hover:bg-white/[0.065] active:scale-[.985];
+  }
+
+  .btn-ghost {
+    @apply btn text-ink-300 hover:bg-white/[0.055] hover:text-ink-100;
+  }
+
+  .btn-danger {
+    @apply btn border border-coral/20 bg-coral/[0.07] text-coral hover:bg-coral/[0.13];
+  }
+
+  .icon-btn {
+    @apply inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/[0.06] bg-white/[0.025] text-ink-300 transition-all duration-200 hover:border-white/[0.12] hover:bg-white/[0.06] hover:text-white active:scale-95;
+  }
+
+  .input {
+    @apply w-full rounded-xl border border-white/[0.075] bg-ink-950/70 px-3.5 py-2.5 text-[13.5px] text-ink-100 outline-none transition-all duration-200 placeholder:text-ink-500 focus:border-violet-500/50 focus:bg-ink-950 focus:ring-4 focus:ring-violet-500/10;
+  }
+
+  .input-lg {
+    @apply input px-4 py-3.5 text-[15px];
+  }
+
+  .label {
+    @apply text-[10.5px] font-semibold uppercase tracking-[0.14em] text-ink-400;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-white/[0.07] bg-white/[0.035] px-2.5 py-1 text-[11px] font-medium text-ink-200;
+  }
+
+  .status-pill {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.035] px-2.5 py-1 text-[10.5px] font-semibold uppercase tracking-[0.08em];
+  }
+
+  .kbd {
+    @apply rounded-md border border-white/[0.09] bg-white/[0.04] px-1.5 py-0.5 font-mono text-[10px] text-ink-300;
+  }
+
+  .divider {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-white/[0.08] to-transparent;
+  }
+
+  .nav-item {
+    @apply relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-medium text-ink-300 transition-all duration-200 hover:bg-white/[0.04] hover:text-ink-100;
+  }
+
+  .nav-item-active {
+    @apply bg-white/[0.055] text-white;
+  }
+
+  .nav-item-active::before {
+    content: '';
+    @apply absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-violet-500;
+    box-shadow: 0 0 14px rgba(129, 71, 255, 0.85);
+  }
+
+  .table-row {
+    @apply border-b border-white/[0.045] transition-colors last:border-0 hover:bg-white/[0.022];
+  }
+
+  .mono {
+    @apply font-mono tracking-[-0.01em];
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-white via-white to-violet-200 bg-clip-text text-transparent;
+  }
+
+  .glow-orb {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(70px);
+    pointer-events: none;
+  }
+
+  .shimmer {
+    background-image: linear-gradient(100deg, transparent 20%, rgba(255, 255, 255, 0.06) 40%, transparent 60%);
+    background-size: 200% 100%;
+    animation: shimmer 1.8s linear infinite;
+  }
+}
+
+@layer utilities {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@media (max-width: 1023px) {
+  .shell-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

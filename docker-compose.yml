@@ -1,0 +1,56 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    environment:
+      APP_PORT: 3000
+      HOST: 0.0.0.0
+      DATABASE_URL: postgres://linkpilot:${POSTGRES_PASSWORD:-linkpilot}@db:5432/linkpilot
+      LINKPILOT_AUTH_TOKEN: ${LINKPILOT_AUTH_TOKEN:-}
+      MAX_SESSIONS: ${MAX_SESSIONS:-100}
+      MAX_CONCURRENT_BROWSERS: ${MAX_CONCURRENT_BROWSERS:-6}
+      SESSION_TIMEOUT_MS: ${SESSION_TIMEOUT_MS:-45000}
+      MAX_REDIRECTS: ${MAX_REDIRECTS:-10}
+      FETCH_TIMEOUT_MS: ${FETCH_TIMEOUT_MS:-9000}
+      PREVIEW_INTERVAL_MS: ${PREVIEW_INTERVAL_MS:-6000}
+      ALLOW_PRIVATE_TARGETS: ${ALLOW_PRIVATE_TARGETS:-false}
+      WORKER_ID: ${WORKER_ID:-worker-primary}
+      WORKER_REGION: ${WORKER_REGION:-docker}
+      WORKER_MAX_SESSIONS: ${WORKER_MAX_SESSIONS:-12}
+      WORKER_PROXY_SERVER: ${WORKER_PROXY_SERVER:-}
+      WORKER_PROXY_USERNAME: ${WORKER_PROXY_USERNAME:-}
+      WORKER_PROXY_PASSWORD: ${WORKER_PROXY_PASSWORD:-}
+      AI_BASE_URL: ${AI_BASE_URL:-}
+      AI_API_KEY: ${AI_API_KEY:-}
+      AI_MODEL: ${AI_MODEL:-gpt-4o-mini}
+      ANALYTICS_PROVIDER: ${ANALYTICS_PROVIDER:-}
+      ANALYTICS_API_URL: ${ANALYTICS_API_URL:-}
+      ANALYTICS_API_KEY: ${ANALYTICS_API_KEY:-}
+      ANALYTICS_WEBHOOK_SECRET: ${ANALYTICS_WEBHOOK_SECRET:-}
+    depends_on:
+      db:
+        condition: service_healthy
+    shm_size: "1gb"
+    volumes:
+      - linkpilot-data:/app/.data
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: linkpilot
+      POSTGRES_USER: linkpilot
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-linkpilot}
+    volumes:
+      - linkpilot-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U linkpilot -d linkpilot"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+volumes:
+  linkpilot-data:
+  linkpilot-db:
