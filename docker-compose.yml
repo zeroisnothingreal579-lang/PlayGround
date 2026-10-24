@@ -1,0 +1,53 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-linkpilot}
+      POSTGRES_USER: ${POSTGRES_USER:-linkpilot}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-linkpilot} -d ${POSTGRES_DB:-linkpilot}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  app:
+    build: .
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      HOST: 0.0.0.0
+      DATABASE_URL: postgres://${POSTGRES_USER:-linkpilot}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-linkpilot}
+      DATABASE_SSL: "false"
+    ports:
+      - "3000:3000"
+    volumes:
+      - linkpilot-data:/app/.data
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  worker:
+    build: .
+    command: ["npm", "run", "worker"]
+    env_file: .env
+    environment:
+      LINKPILOT_SERVER_URL: http://app:3000
+      WORKER_ID: worker-docker-1
+      WORKER_NAME: docker-browser-1
+      WORKER_REGION: docker
+      WORKER_MAX_SESSIONS: "10"
+      WORKER_CONCURRENCY: "3"
+    shm_size: 1gb
+    depends_on:
+      - app
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  linkpilot-data:

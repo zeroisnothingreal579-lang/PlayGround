@@ -1,0 +1,46 @@
+{
+  "name": "linkpilot-ai",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "LinkPilot AI — authorized multi-window URL inspection and redirect automation platform",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n api,web -c magenta,cyan \"PORT=3001 tsx watch server/index.ts\" \"vite --host 0.0.0.0\"",
+    "dev:api": "PORT=3001 tsx watch server/index.ts",
+    "dev:web": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "start": "tsx server/index.ts",
+    "serve": "NODE_ENV=production tsx server/index.ts",
+    "worker": "tsx worker/agent.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "verify": "npm run typecheck && npm run test && npm run build"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "lucide-react": "^0.468.0",
+    "pg": "^8.16.0",
+    "playwright-core": "^1.55.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.0",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.0",
+    "@types/pg": "^8.11.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/ws": "^8.5.13",
+    "@vitejs/plugin-react": "^5.0.0",
+    "concurrently": "^9.1.0",
+    "tailwindcss": "^4.1.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vite": "^7.0.0"
+  }
+}
