@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CloudBook Pro — Your cloud laptop</title>
+  <meta name="description" content="CloudBook Pro is a fully interactive cloud laptop in your browser: 20 GB RAM, 1 TB storage, a desktop, terminal, files, editor, browser, system monitor and more.">
+  <meta name="theme-color" content="#0b0d16">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%238b5cf6'/%3E%3Cstop offset='1' stop-color='%2322d3ee'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cpath d='M20 41h24a8 8 0 0 0 .7-15.9A12 12 0 0 0 21.6 23 8.5 8.5 0 0 0 20 41Z' fill='white'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="wallpaper" aria-hidden="true">
+    <div class="wallpaper-base"></div>
+    <div class="blob blob-a"></div>
+    <div class="blob blob-b"></div>
+    <div class="blob blob-c"></div>
+    <div class="wallpaper-grid"></div>
+    <div class="wallpaper-grain"></div>
+    <div class="wallpaper-vignette"></div>
+  </div>
+
+  <div class="screen" id="screen">
+    <div class="desktop" id="desktop" aria-label="Desktop">
+      <div class="desktop-icons" id="desktop-icons"></div>
+      <div class="desktop-hint" id="desktop-hint">
+        <span class="desktop-hint-dot"></span>
+        <span>Cloud session live · files saved to your 1 TB drive</span>
+      </div>
+    </div>
+
+    <div class="windows-layer" id="windows"></div>
+
+    <header class="menubar" id="menubar">
+      <div class="menubar-left">
+        <button class="menubar-brand" id="brand-menu" aria-label="CloudBook menu" aria-haspopup="true">
+          <span class="brand-mark" data-icon="cloud"></span>
+        </button>
+        <button class="menubar-app" id="active-app-name">Finder</button>
+        <div class="menubar-menus" id="menubar-menus"></div>
+      </div>
+      <div class="menubar-right">
+        <button class="status-chip" id="sync-chip" title="Cloud sync status">
+          <span class="sync-dot"></span><span class="status-label">Synced</span>
+        </button>
+        <span class="status-icon" id="wifi-icon" title="Wi-Fi connected"></span>
+        <span class="status-icon" id="battery-icon" title="Battery 87%"></span>
+        <button class="status-icon menubar-control" id="control-toggle" title="Control Center" aria-label="Control Center"></button>
+        <button class="menubar-clock" id="clock" title="Open Calendar">
+          <span id="clock-date"></span>
+          <span id="clock-time"></span>
+        </button>
+      </div>
+    </header>
+
+    <div class="panel control-center" id="control-center" hidden aria-label="Control Center">
+      <div class="cc-grid">
+        <button class="cc-toggle" data-toggle="wifi">
+          <span class="cc-toggle-icon" data-icon="wifi"></span>
+          <span><strong>Wi-Fi</strong><small>CloudNet 6E</small></span>
+        </button>
+        <button class="cc-toggle" data-toggle="sync">
+          <span class="cc-toggle-icon" data-icon="sync"></span>
+          <span><strong>Cloud Sync</strong><small>Live · 12 ms</small></span>
+        </button>
+        <button class="cc-toggle" data-toggle="focus">
+          <span class="cc-toggle-icon" data-icon="moon"></span>
+          <span><strong>Focus</strong><small>Off</small></span>
+        </button>
+        <button class="cc-toggle" data-toggle="theme">
+          <span class="cc-toggle-icon" data-icon="sun"></span>
+          <span><strong>Appearance</strong><small>Dark</small></span>
+        </button>
+      </div>
+      <label class="cc-slider">
+        <span data-icon="brightness"></span>
+        <input type="range" min="35" max="100" value="100" id="brightness-slider" aria-label="Brightness">
+      </label>
+      <label class="cc-slider">
+        <span data-icon="volume"></span>
+        <input type="range" min="0" max="100" value="70" id="volume-slider" aria-label="Volume">
+      </label>
+      <div class="cc-footer">
+        <div>
+          <strong>CloudBook Pro</strong>
+          <small>20 GB · 1 TB · us-west</small>
+        </div>
+        <button class="btn btn-ghost" id="cc-settings">Settings</button>
+      </div>
+    </div>
+
+    <nav class="dock" id="dock" aria-label="Applications"></nav>
+
+    <div class="toast-stack" id="toasts" aria-live="polite"></div>
+
+    <div class="overlay" id="palette" hidden>
+      <div class="palette-card" role="dialog" aria-modal="true" aria-label="Command palette">
+        <div class="palette-input-row">
+          <span data-icon="search"></span>
+          <input id="palette-input" type="text" placeholder="Search apps, files and actions…" autocomplete="off" spellcheck="false">
+          <kbd>esc</kbd>
+        </div>
+        <div class="palette-results" id="palette-results"></div>
+      </div>
+    </div>
+
+    <div class="lock-screen" id="lock-screen" hidden>
+      <div class="lock-inner">
+        <div class="lock-avatar">C</div>
+        <div class="lock-name">Cloud User</div>
+        <div class="lock-clock" id="lock-clock"></div>
+        <div class="lock-date" id="lock-date"></div>
+        <button class="btn btn-primary" id="unlock-btn">Unlock CloudBook</button>
+        <div class="lock-note">Session encrypted · us-west-2 · 20 GB / 1 TB</div>
+      </div>
+    </div>
+
+    <div class="brightness-veil" id="brightness-veil" aria-hidden="true"></div>
+    <div class="sleep-screen" id="sleep-screen" hidden>
+      <div class="sleep-inner">
+        <span class="brand-mark" data-icon="cloud"></span>
+        <p>Cloud session sleeping</p>
+        <small>Click anywhere or press any key to wake</small>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
