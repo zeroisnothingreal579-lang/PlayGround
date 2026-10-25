@@ -1,0 +1,44 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    init: true
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgresql://linkpilot:${POSTGRES_PASSWORD:-linkpilot-local}@db:5432/linkpilot
+      BROWSER_EXECUTABLE_PATH: /usr/bin/chromium
+      DATA_DIR: /app/data
+    volumes:
+      - linkpilot-data:/app/data
+    shm_size: "1gb"
+    depends_on:
+      db:
+        condition: service_healthy
+    security_opt:
+      - no-new-privileges:true
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: linkpilot
+      POSTGRES_USER: linkpilot
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-linkpilot-local}
+    volumes:
+      - linkpilot-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U linkpilot -d linkpilot"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  linkpilot-data:
+  linkpilot-db:

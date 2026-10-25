@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --grid: rgba(255, 255, 255, 0.032);
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  @apply bg-ink-950 text-slate-200 antialiased;
+  background-image:
+    radial-gradient(ellipse 80% 55% at 9% -6%, rgba(124, 58, 237, 0.18), transparent 58%),
+    radial-gradient(ellipse 60% 50% at 96% 2%, rgba(217, 70, 239, 0.09), transparent 55%),
+    linear-gradient(180deg, #08080d 0%, #09090f 55%, #08080d 100%);
+}
+
+::selection {
+  background: rgba(139, 92, 246, 0.38);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2a3a;
+  border-radius: 999px;
+  border: 2px solid #0a0a11;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3a50;
+}
+
+@layer components {
+  .panel {
+    @apply rounded-2xl border border-white/[0.07] bg-ink-850/80 shadow-card backdrop-blur-xl;
+  }
+  .panel-hover {
+    @apply transition duration-300 hover:border-violet-500/25 hover:bg-ink-800/90;
+  }
+  .label {
+    @apply text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500;
+  }
+  .input {
+    @apply w-full rounded-xl border border-white/[0.08] bg-ink-900/80 px-3.5 py-2.5 text-sm text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-violet-500/55 focus:ring-4 focus:ring-violet-500/10;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-3.5 py-2.5 text-sm font-semibold transition duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  .btn-primary {
+    @apply btn bg-violet-500 text-white shadow-[0_8px_30px_-10px_rgba(139,92,246,.85)] hover:bg-violet-450;
+  }
+  .btn-ghost {
+    @apply btn border border-white/[0.08] bg-white/[0.025] text-slate-300 hover:border-white/[0.16] hover:bg-white/[0.05] hover:text-white;
+  }
+  .btn-danger {
+    @apply btn border border-rose-500/20 bg-rose-500/10 text-rose-300 hover:bg-rose-500/15;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider;
+  }
+  .grid-bg {
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 36px 36px;
+  }
+  .num {
+    @apply font-mono tabular-nums;
+  }
+  .text-gradient {
+    @apply bg-gradient-to-r from-white via-violet-200 to-violet-350 bg-clip-text text-transparent;
+  }
+}
+
+.awwwards-border {
+  position: relative;
+}
+.awwwards-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(130deg, rgba(167, 139, 250, 0.35), rgba(255, 255, 255, 0.02) 35%, rgba(217, 70, 239, 0.1));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.dot-grid {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.09) 0.7px, transparent 0.7px);
+  background-size: 18px 18px;
+}
+
+.progress-shimmer {
+  background: linear-gradient(90deg, #7c3aed, #a78bfa, #d946ef, #7c3aed);
+  background-size: 200% 100%;
+  animation: shimmer 2.2s linear infinite;
+}
+
+.safe-area {
+  padding-bottom: max(env(safe-area-inset-bottom), 0px);
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
