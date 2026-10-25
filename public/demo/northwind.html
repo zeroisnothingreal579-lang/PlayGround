@@ -1,0 +1,1129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Northwind Outfitters</title>
+  <style>
+    :root {
+      --ink: #16352b;
+      --ink-soft: #4d635a;
+      --paper: #f7f3ea;
+      --paper-deep: #efe8da;
+      --moss: #1c4d3d;
+      --moss-bright: #2f6d56;
+      --sun: #ef7a3c;
+      --sun-soft: #f8d6b9;
+      --line: rgba(22, 53, 43, 0.13);
+      --white: #fffdf8;
+      --radius: 16px;
+      --shadow: 0 18px 45px rgba(23, 45, 35, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Avenir Next", "Segoe UI", system-ui, -apple-system, sans-serif;
+      font-size: 14px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, input { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+
+    .announce {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 7px 14px;
+      background: var(--moss);
+      color: #f3ede0;
+      font-size: 10.5px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .announce span { opacity: 0.55; }
+
+    .site-head {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 13px 28px;
+      background: rgba(247, 243, 234, 0.92);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      text-align: left;
+      flex: 0 0 auto;
+    }
+    .logo-mark {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--moss);
+      color: var(--paper);
+    }
+    .logo-copy { line-height: 1; }
+    .logo-copy strong {
+      display: block;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+    .logo-copy small {
+      display: block;
+      margin-top: 3px;
+      font-size: 7.5px;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      opacity: 0.55;
+    }
+
+    .site-nav {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      margin-left: 6px;
+    }
+    .nav-link {
+      border: 0;
+      background: transparent;
+      padding: 8px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-soft);
+      transition: background 0.18s ease, color 0.18s ease;
+    }
+    .nav-link:hover { background: var(--paper-deep); color: var(--ink); }
+    .nav-link.active { background: var(--ink); color: var(--paper); }
+
+    .head-tools {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: auto;
+    }
+    .search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 210px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--white);
+      color: var(--ink-soft);
+    }
+    .search svg { flex: 0 0 auto; opacity: 0.6; }
+    .search input {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      font-size: 11.5px;
+    }
+    .cart-button {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: var(--white);
+    }
+    .cart-count {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      display: grid;
+      place-items: center;
+      min-width: 16px;
+      height: 16px;
+      padding: 0 4px;
+      border-radius: 999px;
+      background: var(--sun);
+      color: #fff;
+      font-size: 8.5px;
+      font-weight: 800;
+    }
+    .avatar {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--sun-soft);
+      color: #7f3b14;
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+    }
+
+    .page-wrap { max-width: 1080px; margin: 0 auto; padding: 26px 28px 0; }
+    [data-page-view][hidden] { display: none !important; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.02fr 1fr;
+      gap: 34px;
+      align-items: center;
+      padding: 4px 0 30px;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--moss-bright);
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 22px;
+      height: 1px;
+      background: currentColor;
+    }
+    .hero h1, .page-intro h1 {
+      margin: 12px 0 13px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(38px, 5.2vw, 62px);
+      line-height: 0.97;
+      letter-spacing: -0.035em;
+      font-weight: 500;
+    }
+    .hero h1 em { color: var(--sun); font-style: italic; }
+    .hero p {
+      max-width: 390px;
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+    .hero-cta { display: flex; align-items: center; gap: 10px; margin-top: 20px; }
+    .btn-primary, .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 11px 18px;
+      border: 1px solid transparent;
+      font-size: 11.5px;
+      font-weight: 700;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .btn-primary { background: var(--moss); color: var(--paper); box-shadow: 0 10px 24px rgba(28, 77, 61, 0.18); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 14px 30px rgba(28, 77, 61, 0.24); }
+    .btn-ghost { background: transparent; border-color: var(--line); color: var(--ink); }
+    .btn-ghost:hover { background: var(--white); }
+
+    .hero-proof {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      margin-top: 22px;
+      color: var(--ink-soft);
+      font-size: 10px;
+    }
+    .avatar-stack { display: flex; }
+    .avatar-stack span {
+      display: grid;
+      place-items: center;
+      width: 25px;
+      height: 25px;
+      margin-left: -7px;
+      border: 2px solid var(--paper);
+      border-radius: 50%;
+      background: #d7c6a7;
+      font-size: 7.5px;
+      font-weight: 800;
+      color: #513b21;
+    }
+    .avatar-stack span:first-child { margin-left: 0; background: #b8cfbf; color: #244b3a; }
+    .avatar-stack span:nth-child(2) { background: #efc8a6; color: #703b17; }
+    .avatar-stack span:nth-child(3) { background: #c8c2dd; color: #3e3465; }
+    .hero-proof strong { color: var(--ink); }
+
+    .hero-art {
+      position: relative;
+      min-height: 286px;
+      overflow: hidden;
+      border-radius: 22px;
+      background: linear-gradient(150deg, #dce6d6 0%, #eef0db 42%, #f4d8b7 100%);
+      box-shadow: var(--shadow);
+    }
+    .hero-art svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .hero-chip {
+      position: absolute;
+      left: 16px;
+      bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      border-radius: 12px;
+      background: rgba(255, 253, 248, 0.82);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 28px rgba(29, 51, 40, 0.14);
+    }
+    .hero-chip .chip-icon {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 9px;
+      background: var(--moss);
+      color: var(--paper);
+    }
+    .hero-chip strong { display: block; font-size: 10.5px; }
+    .hero-chip span { display: block; color: var(--ink-soft); font-size: 9px; }
+    .hero-temp {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      padding: 8px 11px;
+      border-radius: 999px;
+      background: rgba(22, 53, 43, 0.86);
+      color: #f4efe3;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .brand-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 14px 4px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      color: var(--ink-soft);
+      font-family: Georgia, serif;
+      font-size: 12px;
+      font-style: italic;
+    }
+    .brand-strip span:nth-child(2) { opacity: 0.45; }
+
+    .section { padding: 28px 0 10px; }
+    .section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .section-head h2 {
+      margin: 0;
+      font-family: Georgia, serif;
+      font-size: 25px;
+      font-weight: 500;
+      letter-spacing: -0.025em;
+    }
+    .section-head p { margin: 5px 0 0; color: var(--ink-soft); font-size: 11px; }
+    .link-button {
+      border: 0;
+      background: transparent;
+      padding: 0 0 3px;
+      border-bottom: 1px solid var(--ink);
+      font-size: 10.5px;
+      font-weight: 700;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .product {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--white);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .product:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(23, 45, 35, 0.09); }
+    .product-art {
+      position: relative;
+      height: 128px;
+      overflow: hidden;
+      background: linear-gradient(145deg, #d7e3d4, #eef0dd);
+    }
+    .product:nth-child(2) .product-art { background: linear-gradient(145deg, #f2dcc1, #f7ead8); }
+    .product:nth-child(3) .product-art { background: linear-gradient(145deg, #cdd9e2, #e9eef1); }
+    .product-art svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .product-tag {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(255, 253, 248, 0.88);
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .product-body { padding: 12px 13px 13px; }
+    .product-body strong { font-size: 12px; }
+    .product-body p { margin: 3px 0 10px; color: var(--ink-soft); font-size: 10px; }
+    .product-foot { display: flex; align-items: center; justify-content: space-between; }
+    .price { font-family: Georgia, serif; font-size: 15px; }
+    .price small { color: var(--ink-soft); font-family: inherit; font-size: 9px; text-decoration: line-through; margin-right: 4px; }
+    .add-button {
+      display: grid;
+      place-items: center;
+      width: 27px;
+      height: 27px;
+      border: 0;
+      border-radius: 50%;
+      background: var(--ink);
+      color: var(--paper);
+      font-size: 16px;
+      line-height: 1;
+    }
+    .add-button.added { background: var(--sun); }
+
+    .split-banner {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 0;
+      margin-top: 30px;
+      overflow: hidden;
+      border-radius: 20px;
+      background: var(--moss);
+      color: var(--paper);
+    }
+    .split-copy { padding: 28px 30px; }
+    .split-copy .eyebrow { color: #a9c9b8; }
+    .split-copy h2 {
+      margin: 10px 0 8px;
+      font-family: Georgia, serif;
+      font-size: 29px;
+      font-weight: 500;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+    }
+    .split-copy p { max-width: 310px; margin: 0 0 18px; color: rgba(247, 243, 234, 0.67); font-size: 11px; }
+    .split-copy .btn-primary { background: var(--sun); color: #fff; box-shadow: none; }
+    .split-art {
+      position: relative;
+      min-height: 190px;
+      background: linear-gradient(130deg, #2c614e, #193f32);
+    }
+    .split-art svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+    .journal-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .journal {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 248, 0.55);
+    }
+    .journal span { color: var(--sun); font-size: 8px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; }
+    .journal strong { display: block; margin: 7px 0 5px; font-family: Georgia, serif; font-size: 15px; font-weight: 500; }
+    .journal p { margin: 0; color: var(--ink-soft); font-size: 10px; line-height: 1.6; }
+
+    .page-intro { padding: 20px 0 24px; border-bottom: 1px solid var(--line); }
+    .page-intro h1 { max-width: 720px; font-size: clamp(34px, 4.6vw, 54px); }
+    .page-intro p { max-width: 540px; margin: 0; color: var(--ink-soft); font-size: 12px; line-height: 1.65; }
+
+    .filter-row { display: flex; flex-wrap: wrap; gap: 7px; margin: 22px 0 18px; }
+    .filter {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: transparent;
+      padding: 7px 13px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--ink-soft);
+    }
+    .filter.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+    .explore-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 13px; padding-bottom: 26px; }
+    .explore-grid .product-art { height: 110px; }
+    .explore-grid .product-body strong { font-size: 11px; }
+
+    .deal-hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin: 24px 0 18px;
+      padding: 26px 28px;
+      border-radius: 20px;
+      background: linear-gradient(120deg, #ef7a3c, #f0a061);
+      color: #fff9f2;
+      overflow: hidden;
+    }
+    .deal-hero h2 { margin: 5px 0 5px; font-family: Georgia, serif; font-size: 28px; font-weight: 500; }
+    .deal-hero p { margin: 0; color: rgba(255, 249, 242, 0.8); font-size: 11px; }
+    .deal-count {
+      display: flex;
+      gap: 7px;
+    }
+    .deal-count span {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      padding: 7px 0;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.18);
+      font-family: Georgia, serif;
+      font-size: 16px;
+    }
+    .deal-count small { display: block; font-family: inherit; font-size: 7px; text-align: center; letter-spacing: 0.1em; }
+
+    .deal-list { display: grid; gap: 10px; padding-bottom: 28px; }
+    .deal-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--white);
+    }
+    .deal-thumb {
+      display: grid;
+      place-items: center;
+      width: 54px;
+      height: 54px;
+      flex: 0 0 auto;
+      border-radius: 11px;
+      background: linear-gradient(145deg, #d7e3d4, #f0eadb);
+      color: var(--moss);
+    }
+    .deal-thumb:nth-of-type(2) { background: linear-gradient(145deg, #f2dcc1, #f7ead8); }
+    .deal-info { flex: 1; min-width: 0; }
+    .deal-info strong { display: block; font-size: 12px; }
+    .deal-info span { display: block; margin-top: 2px; color: var(--ink-soft); font-size: 10px; }
+    .deal-price { text-align: right; }
+    .deal-price strong { display: block; font-family: Georgia, serif; font-size: 17px; }
+    .deal-price span { color: var(--ink-soft); font-size: 9px; text-decoration: line-through; }
+    .deal-item .add-button { margin-left: 6px; }
+
+    .profile-layout { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 18px; padding: 26px 0 30px; }
+    .profile-card {
+      padding: 22px;
+      border-radius: 18px;
+      background: var(--moss);
+      color: var(--paper);
+    }
+    .profile-avatar {
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--sun);
+      font-family: Georgia, serif;
+      font-size: 18px;
+    }
+    .profile-card h2 { margin: 14px 0 4px; font-family: Georgia, serif; font-size: 23px; font-weight: 500; }
+    .profile-card p { margin: 0; color: rgba(247, 243, 234, 0.62); font-size: 10.5px; }
+    .profile-stats { display: flex; gap: 22px; margin-top: 22px; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.15); }
+    .profile-stats strong { display: block; font-family: Georgia, serif; font-size: 18px; font-weight: 500; }
+    .profile-stats span { color: rgba(247, 243, 234, 0.55); font-size: 8.5px; }
+    .form-card {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--white);
+    }
+    .form-card h3 { margin: 0 0 3px; font-family: Georgia, serif; font-size: 19px; font-weight: 500; }
+    .form-card > p { margin: 0 0 16px; color: var(--ink-soft); font-size: 10.5px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+    .field { display: grid; gap: 5px; }
+    .field.full { grid-column: 1 / -1; }
+    .field span { font-size: 8.5px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); }
+    .field input {
+      width: 100%;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--paper);
+      outline: 0;
+      font-size: 11px;
+    }
+    .field input:focus { border-color: var(--moss-bright); box-shadow: 0 0 0 3px rgba(47, 109, 86, 0.1); }
+    .form-card .btn-primary { margin-top: 14px; }
+    .profile-note { margin-top: 12px; color: var(--ink-soft); font-size: 9px; }
+
+    .site-foot {
+      margin-top: 18px;
+      padding: 18px 28px 22px;
+      border-top: 1px solid var(--line);
+      color: var(--ink-soft);
+      font-size: 9.5px;
+    }
+    .foot-top { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .foot-brand { font-family: Georgia, serif; font-size: 15px; color: var(--ink); }
+    .foot-links { display: flex; gap: 16px; }
+    .foot-bottom { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 12px; font-size: 8.5px; opacity: 0.75; }
+
+    .demo-toast {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      z-index: 60;
+      transform: translate(-50%, 16px);
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--paper);
+      font-size: 10px;
+      font-weight: 600;
+      box-shadow: 0 14px 30px rgba(20, 44, 34, 0.25);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      white-space: nowrap;
+    }
+    .demo-toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (max-width: 760px) {
+      .site-head { padding: 10px 14px; gap: 10px; flex-wrap: wrap; }
+      .site-nav { order: 3; width: 100%; overflow-x: auto; margin-left: 0; padding-bottom: 2px; }
+      .head-tools { gap: 6px; }
+      .search { width: 120px; }
+      .avatar { display: none; }
+      .page-wrap { padding: 18px 15px 0; }
+      .hero { grid-template-columns: 1fr; gap: 20px; padding-bottom: 20px; }
+      .hero h1 { font-size: 40px; }
+      .hero-art { min-height: 190px; }
+      .product-grid, .journal-grid { grid-template-columns: 1fr 1fr; }
+      .product:nth-child(3), .journal:nth-child(3) { display: none; }
+      .brand-strip { font-size: 9px; gap: 10px; }
+      .split-banner { grid-template-columns: 1fr; }
+      .split-art { min-height: 130px; }
+      .explore-grid { grid-template-columns: 1fr 1fr; }
+      .deal-hero { flex-direction: column; align-items: flex-start; }
+      .profile-layout { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .announce { font-size: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="announce">Free carbon-neutral shipping over $120 <span>·</span> 30-day trail returns <span>·</span> Spring field guide is live</div>
+
+  <header class="site-head">
+    <button class="logo" type="button" data-page="home">
+      <span class="logo-mark">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m3 19 6.5-11L14 16l2.3-3.8L21 19H3Z"/>
+          <path d="M17 5.5h.01"/>
+        </svg>
+      </span>
+      <span class="logo-copy"><strong>NORTHWIND</strong><small>Outfitters</small></span>
+    </button>
+
+    <nav class="site-nav" aria-label="Main navigation">
+      <button class="nav-link active" type="button" data-page="home">Home</button>
+      <button class="nav-link" type="button" data-page="explore">Explore</button>
+      <button class="nav-link" type="button" data-page="deals">Deals</button>
+      <button class="nav-link" type="button" data-page="profile">Journal</button>
+    </nav>
+
+    <div class="head-tools">
+      <label class="search">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="demo-search" data-sync-input placeholder="Search gear..." aria-label="Search gear" />
+      </label>
+      <button class="cart-button" type="button" aria-label="Cart" data-cart>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14l-1.3 12H6.3L5 7Z"/><path d="M9 7V5.5a3 3 0 0 1 6 0V7"/></svg>
+        <span class="cart-count" id="cart-count">2</span>
+      </button>
+      <span class="avatar">AK</span>
+    </div>
+  </header>
+
+  <div class="page-wrap">
+    <section data-page-view="home">
+      <div class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">Spring field guide · 2026</span>
+          <h1>Go further.<br /><em>Pack lighter.</em></h1>
+          <p>Field-tested layers, featherweight packs and trail-ready essentials built for long weekends and longer detours.</p>
+          <div class="hero-cta">
+            <button class="btn-primary" type="button" data-page="explore">Explore the gear
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+            <button class="btn-ghost" type="button" data-page="deals">See trail deals</button>
+          </div>
+          <div class="hero-proof">
+            <span class="avatar-stack"><span>JL</span><span>MK</span><span>RA</span></span>
+            <span><strong>4.9/5</strong> from 12,400+ trail days</span>
+          </div>
+        </div>
+
+        <div class="hero-art">
+          <svg viewBox="0 0 520 320" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <defs>
+              <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#f6e3c4"/>
+                <stop offset="1" stop-color="#dfe7d6"/>
+              </linearGradient>
+              <linearGradient id="ridge" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#6f8f79"/>
+                <stop offset="1" stop-color="#3d6654"/>
+              </linearGradient>
+            </defs>
+            <rect width="520" height="320" fill="url(#sky)"/>
+            <circle cx="385" cy="88" r="44" fill="#f0a05f" opacity=".9"/>
+            <path d="M0 208 92 116l58 58 50-44 78 78 48-36 96 76 98-56v128H0Z" fill="#b3c6ae" opacity=".7"/>
+            <path d="M0 242 96 162l54 54 46-38 80 76 52-32 96 64 96-42v76H0Z" fill="url(#ridge)"/>
+            <path d="M0 272c80-20 150 8 240-12 90-20 190 16 280 0v60H0Z" fill="#315945"/>
+            <path d="m252 196 34 56h-68l34-56Z" fill="#f4c97b"/>
+            <path d="m252 196 8 56h-16l8-56Z" fill="#c98b3e"/>
+            <path d="M226 238h52l-8 14h-36l-8-14Z" fill="#e8a95a"/>
+            <path d="M322 78c-13 0-24 11-24 24s11 24 24 24" fill="none" stroke="#47634f" stroke-width="2" opacity=".55"/>
+            <path d="M344 64c-20 0-36 16-36 36" fill="none" stroke="#47634f" stroke-width="1.5" opacity=".35"/>
+            <g opacity=".65" fill="#315945">
+              <path d="m80 248 11-20 11 20H80Z"/><path d="m102 254 9-16 9 16h-18Z"/><path d="m432 240 10-18 10 18h-20Z"/>
+            </g>
+          </svg>
+          <span class="hero-temp">48°F · alpine start</span>
+          <div class="hero-chip">
+            <span class="chip-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17 9 7l4 7 2-3 5 6H4Z"/><path d="M8 4h.01"/></svg>
+            </span>
+            <div><strong>Ridgeline 32L</strong><span>1.2 lb · recycled ripstop</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="brand-strip">
+        <span>“The pack that disappears on your back.”</span>
+        <span>— Trailhead Journal</span>
+        <span>B Corp certified · 1% for trails</span>
+      </div>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <h2>Field-tested favorites</h2>
+            <p>Small-batch gear with repair-first construction.</p>
+          </div>
+          <button class="link-button" type="button" data-page="explore">View all gear</button>
+        </div>
+        <div class="product-grid">
+          <article class="product">
+            <div class="product-art">
+              <svg viewBox="0 0 300 150" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M0 120 70 40l40 45 35-25 55 55 50-30 50 35v30H0Z" fill="#8baa90" opacity=".55"/>
+                <path d="m148 38 42 72h-84l42-72Z" fill="#f2b76a"/>
+                <path d="m148 38 9 72h-18l9-72Z" fill="#c8863d"/>
+              </svg>
+              <span class="product-tag">Bestseller</span>
+            </div>
+            <div class="product-body">
+              <strong>Summit Shell 2.0</strong>
+              <p>3-layer rain protection · 8.4 oz</p>
+              <div class="product-foot">
+                <span class="price">$189</span>
+                <button class="add-button" type="button" data-add aria-label="Add Summit Shell to cart">+</button>
+              </div>
+            </div>
+          </article>
+          <article class="product">
+            <div class="product-art">
+              <svg viewBox="0 0 300 150" preserveAspectRatio="none" aria-hidden="true">
+                <rect x="74" y="28" width="152" height="94" rx="44" fill="#dfa875"/>
+                <rect x="92" y="40" width="116" height="70" rx="32" fill="#f1c99b"/>
+                <path d="M116 60h68M116 76h44" stroke="#a96d3c" stroke-width="5" stroke-linecap="round" opacity=".7"/>
+              </svg>
+              <span class="product-tag">New</span>
+            </div>
+            <div class="product-body">
+              <strong>Drift 28L Pack</strong>
+              <p>Ventilated carry · 1.1 lb</p>
+              <div class="product-foot">
+                <span class="price">$142</span>
+                <button class="add-button" type="button" data-add aria-label="Add Drift pack to cart">+</button>
+              </div>
+            </div>
+          </article>
+          <article class="product">
+            <div class="product-art">
+              <svg viewBox="0 0 300 150" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M88 104c10-38 28-56 62-56s52 18 62 56" fill="none" stroke="#4c6c7c" stroke-width="14" stroke-linecap="round"/>
+                <path d="M104 104h92" stroke="#7292a3" stroke-width="14" stroke-linecap="round"/>
+                <circle cx="150" cy="44" r="18" fill="#83a3b3"/>
+              </svg>
+              <span class="product-tag">Low stock</span>
+            </div>
+            <div class="product-body">
+              <strong>Cirrus Down Vest</strong>
+              <p>800-fill · packs into pocket</p>
+              <div class="product-foot">
+                <span class="price"><small>$168</small>$124</span>
+                <button class="add-button" type="button" data-add aria-label="Add Cirrus vest to cart">+</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="split-banner">
+        <div class="split-copy">
+          <span class="eyebrow">Trail notes · issue 04</span>
+          <h2>Three days on the<br />Lost Coast.</h2>
+          <p>Fog, black sand and a pack that stayed dry. Our field team shares the loadout that made the miles disappear.</p>
+          <button class="btn-primary" type="button" data-page="deals">Shop the loadout</button>
+        </div>
+        <div class="split-art">
+          <svg viewBox="0 0 500 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <path d="M0 160 84 92l44 44 40-30 62 58 48-32 70 48 60-24 92 44v40H0Z" fill="#0f2e25" opacity=".55"/>
+            <path d="M0 182c70-14 120 10 196-4 76-14 128 12 204-2 40-8 70-2 100 4v40H0Z" fill="#0d2821"/>
+            <circle cx="386" cy="68" r="30" fill="#e9a45f" opacity=".85"/>
+            <path d="M76 182c8-24 25-36 45-36s37 12 45 36" fill="#e9d5b5" opacity=".2"/>
+            <path d="M118 142v40M104 182h28" stroke="#e9d5b5" stroke-width="2" opacity=".5"/>
+          </svg>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <h2>From the field journal</h2>
+            <p>Repair guides, route notes and gear that earns its place.</p>
+          </div>
+          <button class="link-button" type="button" data-page="profile">Meet the crew</button>
+        </div>
+        <div class="journal-grid">
+          <article class="journal"><span>Repair</span><strong>The five-minute seam fix</strong><p>Keep a patch kit in your hip pocket and extend the life of your shell by seasons, not months.</p></article>
+          <article class="journal"><span>Route</span><strong>Waterproofing, honestly</strong><p>What DWR actually does, when to reapply it, and why a little dirt is part of the story.</p></article>
+          <article class="journal"><span>People</span><strong>Meet the trail crew</strong><p>Three pack fitters, one shared belief: the best gear is the gear you forget you are wearing.</p></article>
+        </div>
+      </section>
+    </section>
+
+    <section data-page-view="explore" hidden>
+      <div class="page-intro">
+        <span class="eyebrow">The gear room</span>
+        <h1>Find your next trail.</h1>
+        <p>Everything here has been carried, rained on and repaired by our field team. Filter by the way you move, not by the label.</p>
+      </div>
+      <div class="filter-row">
+        <button class="filter active" type="button" data-filter>All gear</button>
+        <button class="filter" type="button" data-filter>Packs</button>
+        <button class="filter" type="button" data-filter>Layers</button>
+        <button class="filter" type="button" data-filter>Camp</button>
+        <button class="filter" type="button" data-filter>Repair</button>
+      </div>
+      <div class="section-head">
+        <div><h2>26 pieces, endlessly repairable</h2><p>Free repairs for the first three years.</p></div>
+        <button class="link-button" type="button" data-page="deals">See sale pieces</button>
+      </div>
+      <div class="explore-grid">
+        <article class="product"><div class="product-art"><svg viewBox="0 0 300 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 100 60 35l35 38 30-22 50 45 44-28 41 32 40-20v40H0Z" fill="#8baa90" opacity=".55"/><path d="m150 32 30 58h-60l30-58Z" fill="#f2b76a"/></svg><span class="product-tag">Pack</span></div><div class="product-body"><strong>Ridgeline 32L</strong><p>1.2 lb · recycled ripstop</p><div class="product-foot"><span class="price">$168</span><button class="add-button" type="button" data-add>+</button></div></div></article>
+        <article class="product"><div class="product-art"><svg viewBox="0 0 300 120" preserveAspectRatio="none" aria-hidden="true"><rect x="82" y="22" width="136" height="76" rx="36" fill="#dfa875"/><rect x="96" y="32" width="108" height="56" rx="28" fill="#f1c99b"/><path d="M116 50h60M116 64h36" stroke="#a96d3c" stroke-width="5" stroke-linecap="round" opacity=".7"/></svg><span class="product-tag">Pack</span></div><div class="product-body"><strong>Drift 28L</strong><p>Ventilated carry · 1.1 lb</p><div class="product-foot"><span class="price">$142</span><button class="add-button" type="button" data-add>+</button></div></div></article>
+        <article class="product"><div class="product-art"><svg viewBox="0 0 300 120" preserveAspectRatio="none" aria-hidden="true"><path d="M92 88c8-32 24-48 58-48s50 16 58 48" fill="none" stroke="#4c6c7c" stroke-width="12" stroke-linecap="round"/><path d="M108 88h84" stroke="#7292a3" stroke-width="12" stroke-linecap="round"/><circle cx="150" cy="34" r="15" fill="#83a3b3"/></svg><span class="product-tag">Layer</span></div><div class="product-body"><strong>Cirrus Down Vest</strong><p>800-fill · pocket packable</p><div class="product-foot"><span class="price">$124</span><button class="add-button" type="button" data-add>+</button></div></div></article>
+        <article class="product"><div class="product-art"><svg viewBox="0 0 300 120" preserveAspectRatio="none" aria-hidden="true"><path d="M70 90h160l-14-49H84L70 90Z" fill="#93ac9b"/><path d="M100 41v-7a50 50 0 0 1 100 0v7" fill="none" stroke="#5c7a67" stroke-width="7"/><path d="M120 70h60" stroke="#e8efe5" stroke-width="5" stroke-linecap="round" opacity=".7"/></svg><span class="product-tag">Camp</span></div><div class="product-body"><strong>Basecamp Duffel</strong><p>70L · weatherproof zip</p><div class="product-foot"><span class="price">$96</span><button class="add-button" type="button" data-add>+</button></div></div></article>
+        <article class="product"><div class="product-art"><svg viewBox="0 0 300 120" preserveAspectRatio="none" aria-hidden="true"><circle cx="150" cy="58" r="34" fill="#e2cba7"/><circle cx="150" cy="58" r="20" fill="#f6eee0"/><path d="M92 96h116" stroke="#b38f63" stroke-width="8" stroke-linecap="round"/></svg><span class="product-tag">Repair</span></div><div class="product-body"><strong>Field Patch Kit</strong><p>Ten patches · brass tools</p><div class="product-foot"><span class="price">$18</span><button class="add-button" type="button" data-add>+</button></div></div></article>
+        <article class="product"><div class="product-art"><svg viewBox="0 0 300 120" preserveAspectRatio="none" aria-hidden="true"><path d="M66 90c0-34 26-61 60-61h48c34 0 60 27 60 61" fill="#789a86"/><path d="M100 90V58c0-14 10-22 24-22h52c14 0 24 8 24 22v32" fill="#c3d3c3"/><path d="M130 62h40" stroke="#5b7a66" stroke-width="5" stroke-linecap="round"/></svg><span class="product-tag">Layer</span></div><div class="product-body"><strong>Alpine Fleece</strong><p>Grid fleece · 9.8 oz</p><div class="product-foot"><span class="price">$88</span><button class="add-button" type="button" data-add>+</button></div></div></article>
+        <article class="product"><div class="product-art"><svg viewBox="0 0 300 120" preserveAspectRatio="none" aria-hidden="true"><path d="M100 92V44l50-18 50 18v48" fill="#c7a87e"/><path d="M120 92V58h60v34" fill="#f1e3cd"/><path d="M144 78h12v14h-12z" fill="#8a6b46"/></svg><span class="product-tag">Camp</span></div><div class="product-body"><strong>Two-Pole Shelter</strong><p>2-person · 2.1 lb</p><div class="product-foot"><span class="price">$289</span><button class="add-button" type="button" data-add>+</button></div></div></article>
+        <article class="product"><div class="product-art"><svg viewBox="0 0 300 120" preserveAspectRatio="none" aria-hidden="true"><path d="M110 90h80l10-36-50-22-50 22 10 36Z" fill="#d9b98f"/><path d="M130 32h40" stroke="#8d6f4b" stroke-width="6" stroke-linecap="round"/><path d="M140 54h20" stroke="#8d6f4b" stroke-width="5" stroke-linecap="round"/></svg><span class="product-tag">Camp</span></div><div class="product-body"><strong>Titanium Cook Set</strong><p>Nesting · 5.2 oz</p><div class="product-foot"><span class="price">$74</span><button class="add-button" type="button" data-add>+</button></div></div></article>
+      </div>
+    </section>
+
+    <section data-page-view="deals" hidden>
+      <div class="page-intro">
+        <span class="eyebrow">Trail deals · ends Sunday</span>
+        <h1>Good gear. Better prices.</h1>
+        <p>Last-season colorways, repaired returns and sample pieces — all covered by the same repair promise.</p>
+      </div>
+      <div class="deal-hero">
+        <div>
+          <span class="eyebrow" style="color:#fff3e7">Spring clearance</span>
+          <h2>Up to 35% off layers.</h2>
+          <p>Use code <strong style="color:#fff">TRAIL35</strong> at checkout. Free returns, always.</p>
+        </div>
+        <div class="deal-count"><span>02<small>DAYS</small></span><span>14<small>HRS</small></span><span>38<small>MIN</small></span></div>
+      </div>
+      <div class="section-head">
+        <div><h2>This week’s markdowns</h2><p>Prices reflect final sale. Repairs included.</p></div>
+        <button class="link-button" type="button" data-page="explore">Back to all gear</button>
+      </div>
+      <div class="deal-list">
+        <article class="deal-item">
+          <span class="deal-thumb"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 18 6-10 4.5 7 2-3 5.5 6H3Z"/><path d="M17 5h.01"/></svg></span>
+          <div class="deal-info"><strong>Summit Shell 2.0</strong><span>Ember / 3-layer waterproof · sizes S–L</span></div>
+          <div class="deal-price"><strong>$132</strong><span>$189</span></div>
+          <button class="add-button" type="button" data-add aria-label="Add Summit Shell deal">+</button>
+        </article>
+        <article class="deal-item">
+          <span class="deal-thumb"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="7" width="14" height="11" rx="4"/><path d="M9 7V5.5a3 3 0 0 1 6 0V7M9 11h6"/></svg></span>
+          <div class="deal-info"><strong>Drift 28L Pack</strong><span>Sample color · one size · 1.1 lb</span></div>
+          <div class="deal-price"><strong>$98</strong><span>$142</span></div>
+          <button class="add-button" type="button" data-add aria-label="Add Drift pack deal">+</button>
+        </article>
+        <article class="deal-item">
+          <span class="deal-thumb"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18c1-7 5-11 12-11M8 20c2-4 5-6 10-6"/><circle cx="6" cy="18" r="2"/></svg></span>
+          <div class="deal-info"><strong>Cirrus Down Vest</strong><span>Moss / 800-fill · sizes M–XL</span></div>
+          <div class="deal-price"><strong>$86</strong><span>$124</span></div>
+          <button class="add-button" type="button" data-add aria-label="Add Cirrus vest deal">+</button>
+        </article>
+        <article class="deal-item">
+          <span class="deal-thumb"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 16h16l-2-6H6l-2 6Z"/><path d="M8 10V8a4 4 0 0 1 8 0v2M9 20h6"/></svg></span>
+          <div class="deal-info"><strong>Basecamp Duffel 70L</strong><span>Repaired return · grade A</span></div>
+          <div class="deal-price"><strong>$64</strong><span>$96</span></div>
+          <button class="add-button" type="button" data-add aria-label="Add Basecamp duffel deal">+</button>
+        </article>
+      </div>
+    </section>
+
+    <section data-page-view="profile" hidden>
+      <div class="page-intro">
+        <span class="eyebrow">Member profile</span>
+        <h1>Your trail profile.</h1>
+        <p>Keep your fit preferences, repair history and field notes in one place. Everything syncs across your windows.</p>
+      </div>
+      <div class="profile-layout">
+        <aside class="profile-card">
+          <span class="profile-avatar">AK</span>
+          <h2>Aarav K.</h2>
+          <p>Member since 2022 · Pacific Northwest</p>
+          <div class="profile-stats">
+            <div><strong>14</strong><span>FIELD DAYS</span></div>
+            <div><strong>06</strong><span>REPAIRS</span></div>
+            <div><strong>32L</strong><span>GO-TO PACK</span></div>
+          </div>
+        </aside>
+        <div class="form-card">
+          <h3>Fit & trail preferences</h3>
+          <p>Type here and every mirrored window updates in real time.</p>
+          <div class="form-grid">
+            <label class="field"><span>First name</span><input id="profile-first" data-sync-input value="Aarav" /></label>
+            <label class="field"><span>Last name</span><input id="profile-last" data-sync-input value="Kulkarni" /></label>
+            <label class="field full"><span>Email</span><input id="profile-email" data-sync-input value="aarav@example.com" /></label>
+            <label class="field full"><span>Usual terrain</span><input id="profile-terrain" data-sync-input placeholder="Ridgelines, river valleys, muddy approaches" /></label>
+          </div>
+          <button class="btn-primary" type="button" data-save id="profile-save">Save profile
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
+          </button>
+          <p class="profile-note">No password changes are captured in this demo surface.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="site-foot">
+    <div class="foot-top">
+      <div>
+        <div class="foot-brand">NORTHWIND</div>
+        <div>Gear for the long way around.</div>
+      </div>
+      <div class="foot-links">
+        <span>Repairs</span><span>Field journal</span><span>Trail fund</span><span>Contact</span>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Northwind Outfitters · Demo storefront for StackView</span>
+      <span>Carbon neutral shipping · 1% for trails</span>
+    </div>
+  </footer>
+
+  <div class="demo-toast" id="demo-toast" role="status"></div>
+
+  <script>
+    (function () {
+      var params = new URLSearchParams(location.search);
+      var winId = params.get('win') || 'standalone';
+      var canPost = window.parent && window.parent !== window;
+      var applying = false;
+      var pages = ['home', 'explore', 'deals', 'profile'];
+      var currentPage = pages.indexOf(params.get('page')) >= 0 ? params.get('page') : 'home';
+      var cartCount = 2;
+      var cart = document.getElementById('cart-count');
+      var toast = document.getElementById('demo-toast');
+      var toastTimer;
+
+      document.querySelectorAll('[data-add]').forEach(function (button, index) { button.id = 'add-' + index; });
+      document.querySelectorAll('[data-filter]').forEach(function (chip, index) { chip.id = 'filter-' + index; });
+
+      function post(type, payload) {
+        if (!canPost) return;
+        window.parent.postMessage(Object.assign({ source: 'stackview-demo', winId: winId, type: type }, payload || {}), '*');
+      }
+
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () { toast.classList.remove('show'); }, 1900);
+      }
+
+      function setPage(page) {
+        if (pages.indexOf(page) < 0) page = 'home';
+        currentPage = page;
+        document.querySelectorAll('[data-page-view]').forEach(function (view) {
+          view.hidden = view.getAttribute('data-page-view') !== page;
+        });
+        document.querySelectorAll('.nav-link').forEach(function (link) {
+          link.classList.toggle('active', link.getAttribute('data-page') === page);
+        });
+        if (history.replaceState) {
+          history.replaceState(null, '', '?page=' + page + '&win=' + encodeURIComponent(winId));
+        }
+        window.scrollTo(0, 0);
+      }
+
+      function updateCart() {
+        if (cart) cart.textContent = String(cartCount);
+      }
+
+      document.addEventListener('click', function (event) {
+        var pageButton = event.target.closest('[data-page]');
+        if (pageButton) {
+          event.preventDefault();
+          setPage(pageButton.getAttribute('data-page'));
+          if (!applying) post('navigate', { page: currentPage });
+          return;
+        }
+
+        var filter = event.target.closest('[data-filter]');
+        if (filter) {
+          document.querySelectorAll('[data-filter]').forEach(function (chip) { chip.classList.remove('active'); });
+          filter.classList.add('active');
+          if (!applying) {
+            post('click', { selector: '#' + filter.id });
+            showToast('Filtered: ' + filter.textContent.trim());
+          }
+          return;
+        }
+
+        var addButton = event.target.closest('[data-add]');
+        if (addButton) {
+          cartCount += 1;
+          updateCart();
+          addButton.classList.add('added');
+          addButton.textContent = '✓';
+          setTimeout(function () { addButton.classList.remove('added'); addButton.textContent = '+'; }, 1200);
+          if (!applying) {
+            post('click', { selector: '#' + addButton.id });
+            showToast('Added to your pack · ' + cartCount + ' items');
+          }
+          return;
+        }
+
+        var save = event.target.closest('[data-save]');
+        if (save) {
+          showToast('Profile saved across this window group');
+          if (!applying) post('click', { selector: '#profile-save' });
+        }
+      });
+
+      document.querySelectorAll('[data-sync-input]').forEach(function (input) {
+        input.addEventListener('input', function () {
+          if (applying) return;
+          if (!input.id) return;
+          post('input', { selector: '#' + input.id, value: input.value });
+        });
+      });
+
+      var ticking = false;
+      window.addEventListener('scroll', function () {
+        if (applying || ticking) return;
+        ticking = true;
+        requestAnimationFrame(function () {
+          ticking = false;
+          var max = document.documentElement.scrollHeight - window.innerHeight;
+          var ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+          post('scroll', { ratio: ratio });
+        });
+      }, { passive: true });
+
+      window.addEventListener('message', function (event) {
+        var data = event.data;
+        if (!data || data.source !== 'stackview-host' || data.target !== winId) return;
+        var action = data.action || {};
+        applying = true;
+
+        if (action.type === 'navigate') {
+          setPage(action.page);
+          setTimeout(function () { applying = false; }, 120);
+          return;
+        }
+
+        if (action.type === 'scroll') {
+          var max = document.documentElement.scrollHeight - window.innerHeight;
+          window.scrollTo(0, Math.max(0, Math.min(1, Number(action.ratio) || 0)) * max);
+          setTimeout(function () { applying = false; }, 90);
+          return;
+        }
+
+        if (action.type === 'input') {
+          var field = document.querySelector(action.selector);
+          if (field) field.value = action.value;
+          setTimeout(function () { applying = false; }, 30);
+          return;
+        }
+
+        if (action.type === 'click' && action.selector) {
+          var target = document.querySelector(action.selector);
+          if (target) target.click();
+          setTimeout(function () { applying = false; }, 90);
+          return;
+        }
+
+        if (action.type === 'demo-scroll') {
+          applying = false;
+          var input = document.getElementById('demo-search');
+          if (input) input.value = 'trail pack';
+          var height = document.documentElement.scrollHeight - window.innerHeight;
+          window.scrollTo({ top: Math.round(height * 0.46), behavior: 'smooth' });
+          setTimeout(function () {
+            if (input) post('input', { selector: '#demo-search', value: input.value });
+          }, 420);
+          setTimeout(function () {
+            var max = document.documentElement.scrollHeight - window.innerHeight;
+            post('scroll', { ratio: max > 0 ? Math.min(1, window.scrollY / max) : 0 });
+            showToast('Sync pulse · scroll + typing');
+          }, 720);
+          return;
+        }
+
+        applying = false;
+      });
+
+      setPage(currentPage);
+      setTimeout(function () { post('ready', { page: currentPage }); }, 60);
+    })();
+  </script>
+</body>
+</html>

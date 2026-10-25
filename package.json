@@ -1,0 +1,25 @@
+{
+  "name": "stackview-sync-browser",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "electron:start": "npm run build && electron .",
+    "electron:dev": "electron .",
+    "smoke": "npm run build && STACKVIEW_START_URL=https://example.com xvfb-run -a electron . --no-sandbox --smoke"
+  },
+  "dependencies": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "ws": "^8.22.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "4.3.3",
+    "electron": "^31.7.7",
+    "vite": "5.4.11"
+  },
+  "main": "electron/main.cjs"
+}
