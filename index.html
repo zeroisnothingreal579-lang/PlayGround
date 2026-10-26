@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#06070f">
+  <meta name="description" content="Aether CloudBook — a complete cloud laptop with 20 GB RAM, 1 TB NVMe storage, and a beautifully connected desktop.">
+  <title>Aether CloudBook — Your cloud laptop</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%238b7cff'/%3E%3Cstop offset='1' stop-color='%2367e8f9'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%23090b18'/%3E%3Cpath d='M44 43H23a11 11 0 1 1 10.6-14h2.8a7 7 0 1 1 0 14Z' fill='none' stroke='url(%23g)' stroke-width='3.2'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="apps.css">
+  <link rel="stylesheet" href="apps2.css">
+  <link rel="stylesheet" href="apps3.css">
+</head>
+<body>
+  <svg class="svg-sprite" aria-hidden="true">
+    <defs>
+      <linearGradient id="accentGradient" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="var(--accent)"></stop>
+        <stop offset="1" stop-color="var(--accent-2)"></stop>
+      </linearGradient>
+    </defs>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M17.5 19H8.8a6.8 6.8 0 1 1 6.5-8.8h2.2a4.4 4.4 0 1 1 0 8.8Z"></path></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.2 12 3l9 7.2V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1Z"></path></symbol>
+    <symbol id="i-activity" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.7-.9L9.2 3.9A2 2 0 0 0 7.5 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"></path></symbol>
+    <symbol id="i-terminal" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"></path></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path><path d="M14 2v6h6M8 13h8M8 17h6"></path></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></symbol>
+    <symbol id="i-calculator" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="8" y1="10" x2="8" y2="10"></line><line x1="12" y1="10" x2="12" y2="10"></line><line x1="16" y1="10" x2="16" y2="10"></line><line x1="8" y1="14" x2="8" y2="14"></line><line x1="12" y1="14" x2="12" y2="14"></line><line x1="16" y1="14" x2="16" y2="14"></line><line x1="8" y1="18" x2="8" y2="18"></line><line x1="12" y1="18" x2="12" y2="18"></line><line x1="16" y1="18" x2="16" y2="18"></line></symbol>
+    <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="m21 15-5-5L5 21"></path></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"></path></symbol>
+    <symbol id="i-store" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path d="M3 6h18M16 10a4 4 0 0 1-8 0"></path></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></symbol>
+    <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M5 12.6a10 10 0 0 1 14 0M8.5 16.1a5 5 0 0 1 7 0M2 9a15 15 0 0 1 20 0"></path><circle cx="12" cy="20" r=".8" fill="currentColor"></circle></symbol>
+    <symbol id="i-battery" viewBox="0 0 24 24"><rect x="2" y="7" width="17" height="10" rx="2"></rect><line x1="22" y1="10" x2="22" y2="14"></line><rect x="4.5" y="9.5" width="10" height="5" rx="1" fill="currentColor" stroke="none"></rect></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"></path></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><line x1="6" y1="6" x2="18" y2="18"></line><line x1="18" y1="6" x2="6" y2="18"></line></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line></symbol>
+    <symbol id="i-square" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"></rect></symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></symbol>
+    <symbol id="i-chevron-left" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></symbol>
+    <symbol id="i-arrow-up" viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="6 11 12 5 18 11"></polyline></symbol>
+    <symbol id="i-arrow-down" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="6 13 12 19 18 13"></polyline></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 15h10l1-15M10 11v6M14 11v6"></path></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"></path></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3" fill="currentColor" stroke="none"></polygon></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1" fill="currentColor" stroke="none"></rect><rect x="14" y="4" width="4" height="16" rx="1" fill="currentColor" stroke="none"></rect></symbol>
+    <symbol id="i-skip-back" viewBox="0 0 24 24"><polygon points="19 20 9 12 19 4 19 20" fill="currentColor" stroke="none"></polygon><line x1="5" y1="19" x2="5" y2="5"></line></symbol>
+    <symbol id="i-skip-forward" viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4" fill="currentColor" stroke="none"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></symbol>
+    <symbol id="i-power" viewBox="0 0 24 24"><path d="M18.4 6.6a9 9 0 1 1-12.8 0M12 2v10"></path></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 2v6h-6M3 22v-6h6"></path><path d="M3.5 9a9 9 0 0 1 14.8-3.4L21 8M21 15a9 9 0 0 1-14.8 3.4L3 16"></path></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"></path></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></symbol>
+    <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"></rect><rect x="9" y="9" width="6" height="6" rx="1"></rect><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"></path></symbol>
+    <symbol id="i-memory" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="10" rx="2"></rect><path d="M7 17v3M12 17v3M17 17v3M7 7V4M12 7V4M17 7V4"></path></symbol>
+    <symbol id="i-hard-drive" viewBox="0 0 24 24"><line x1="22" y1="12" x2="2" y2="12"></line><path d="M5.5 5h13l3.5 7v5a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-5Z"></path><circle cx="7" cy="16" r=".8" fill="currentColor"></circle></symbol>
+    <symbol id="i-network" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="6" rx="1"></rect><rect x="2" y="16" width="6" height="6" rx="1"></rect><rect x="16" y="16" width="6" height="6" rx="1"></rect><path d="M12 8v4M5 16v-4h14v4"></path></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5Z"></path><polyline points="8.5 12 11 14.5 15.5 9.5"></polyline></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15.5 14"></polyline></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="17" rx="2"></rect><line x1="16" y1="2" x2="16" y2="7"></line><line x1="8" y1="2" x2="8" y2="7"></line><line x1="3" y1="11" x2="21" y2="11"></line></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-10 6L2 7"></path></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M14.5 4 16 7h4a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h4l1.5-3Z"></path><circle cx="12" cy="13" r="4"></circle></symbol>
+    <symbol id="i-map-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.3 22 9.3 17 14.2 18.2 21 12 17.8 5.8 21 7 14.2 2 9.3 8.9 8.3 12 2"></polygon></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path></symbol>
+    <symbol id="i-save" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1" fill="currentColor"></circle><circle cx="12" cy="12" r="1" fill="currentColor"></circle><circle cx="19" cy="12" r="1" fill="currentColor"></circle></symbol>
+    <symbol id="i-launch" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"></circle><path d="M12 2v4M12 18v4M2 12h4M18 12h4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M19.1 4.9l-2.8 2.8M7.7 16.3l-2.8 2.8"></path></symbol>
+    <symbol id="i-cloud-check" viewBox="0 0 24 24"><path d="M17.5 19H8.8a6.8 6.8 0 1 1 6.5-8.8h2.2a4.4 4.4 0 1 1 0 8.8Z"></path><polyline points="9 13.5 11 15.5 15 11.5"></polyline></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></symbol>
+    <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0 0 18h1.5a2 2 0 0 0 1.5-3.3 2 2 0 0 1 1.5-3.3H18a3 3 0 0 0 3-3 9 9 0 0 0-9-8.4Z"></path><circle cx="7.5" cy="10.5" r="1" fill="currentColor"></circle><circle cx="9.5" cy="6.5" r="1" fill="currentColor"></circle><circle cx="14.5" cy="6.5" r="1" fill="currentColor"></circle><circle cx="17" cy="10.5" r="1" fill="currentColor"></circle></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><line x1="12" y1="11" x2="12" y2="17"></line><circle cx="12" cy="7.5" r=".8" fill="currentColor"></circle></symbol>
+    <symbol id="i-log-out" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></symbol>
+    <symbol id="i-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"></path></symbol>
+    <symbol id="i-bluetooth" viewBox="0 0 24 24"><polyline points="7 7 17 17 12 22 12 2 17 7 7 17"></polyline></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></symbol>
+    <symbol id="i-folder-plus" viewBox="0 0 24 24"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.7-.9L9.2 3.9A2 2 0 0 0 7.5 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"></path><line x1="12" y1="11" x2="12" y2="17"></line><line x1="9" y1="14" x2="15" y2="14"></line></symbol>
+    <symbol id="i-file-plus" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path><path d="M14 2v6h6M12 12v6M9 15h6"></path></symbol>
+    <symbol id="i-corner-up-left" viewBox="0 0 24 24"><polyline points="9 14 4 9 9 4"></polyline><path d="M20 20v-7a4 4 0 0 0-4-4H4"></path></symbol>
+    <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></symbol>
+    <symbol id="i-cloud-weather" viewBox="0 0 24 24"><path d="M17.5 19H8.8a6.8 6.8 0 1 1 6.5-8.8h2.2a4.4 4.4 0 1 1 0 8.8Z"></path><path d="M8 22h8"></path></symbol>
+    <symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"></circle><line x1="12" y1="9" x2="12" y2="13"></line><line x1="9" y1="2" x2="15" y2="2"></line><line x1="18.4" y1="5.6" x2="19.8" y2="7"></line></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></symbol>
+    <symbol id="i-chrome" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6"></circle><circle cx="12" cy="12" r="3.3"></circle><path d="M12 8.7h8.3M9 14.2l-4.1 7.1M15 14.2l-4.1 7.1"></path></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"></path><path d="M22 2 11 13"></path></symbol>
+    <symbol id="i-archive" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="5" rx="1"></rect><path d="M4 9v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9M10 13h4"></path></symbol>
+    <symbol id="i-reply" viewBox="0 0 24 24"><polyline points="9 17 4 12 9 7"></polyline><path d="M20 18v-2a4 4 0 0 0-4-4H4"></path></symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="m12 3 1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9Z"></path><path d="M19 16v4M17 18h4M5 3v4M3 5h4"></path></symbol>
+    <symbol id="i-keyboard" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M6 9h.01M10 9h.01M14 9h.01M18 9h.01M6 13h.01M10 13h.01M14 13h.01M18 13h.01M8 17h8"></path></symbol>
+    <symbol id="i-maximize" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"></path></symbol>
+    <symbol id="i-minimize" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></symbol>
+    <symbol id="i-mouse-pointer" viewBox="0 0 24 24"><path d="m3 3 7.1 18.6 2.6-7.9 7.9-2.6Z"></path></symbol>
+    <symbol id="i-weather" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></symbol>
+  </svg>
+
+  <div class="boot" id="boot">
+    <div class="boot-aurora"></div>
+    <div class="boot-content">
+      <div class="boot-mark">
+        <span class="boot-mark-ring"></span>
+        <svg><use href="#i-cloud"></use></svg>
+      </div>
+      <h1>Aether<span>CloudBook</span></h1>
+      <p class="boot-sub">Connecting to <strong>us-west-2</strong><span class="boot-dot"></span>12 ms</p>
+      <div class="boot-progress"><span></span></div>
+      <div class="boot-specs">
+        <span>8 vCPU</span>
+        <span>20 GB RAM</span>
+        <span>1 TB NVMe</span>
+        <span>10 Gbps</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="desktop" id="desktop">
+    <div class="wallpaper" id="wallpaper" data-wallpaper="aurora"></div>
+    <div class="wallpaper-grid"></div>
+
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="brand" id="brandBtn" aria-label="Open app launcher">
+          <span class="brand-mark"><svg><use href="#i-cloud"></use></svg></span>
+          <span class="brand-name">Aether</span>
+        </button>
+        <div class="topbar-menus">
+          <button class="tb-menu" data-menu-action="new-note">File</button>
+          <button class="tb-menu" data-menu-action="launcher">Go</button>
+          <button class="tb-menu" data-menu-action="settings">View</button>
+        </div>
+        <div class="region-pill">
+          <span class="live-dot"></span>
+          <span id="regionLabel">us-west-2</span>
+          <span class="region-sep"></span>
+          <span id="latencyLabel">12 ms</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="tb-icon" id="wifiBtn" aria-label="Cloud connection">
+          <svg><use href="#i-wifi"></use></svg>
+        </button>
+        <button class="tb-icon battery-btn" id="batteryBtn" aria-label="Battery 98 percent">
+          <span class="battery-pct">98%</span>
+          <svg><use href="#i-battery"></use></svg>
+        </button>
+        <button class="tb-icon" id="volumeBtn" aria-label="Volume">
+          <svg><use href="#i-volume"></use></svg>
+        </button>
+        <button class="clock-btn" id="clockBtn" aria-label="Open control centre">
+          <span id="clockDate">Mon 26 Oct</span>
+          <strong id="clockTime">09:41</strong>
+        </button>
+        <button class="avatar-btn" id="avatarBtn" aria-label="Account and control centre">A</button>
+      </div>
+    </header>
+
+    <div class="desktop-icons" id="desktopIcons"></div>
+
+    <div class="desktop-menu" id="desktopMenu" hidden>
+      <button data-desk-action="new-folder"><svg><use href="#i-folder-plus"></use></svg> New folder</button>
+      <button data-desk-action="new-file"><svg><use href="#i-file-plus"></use></svg> New text file</button>
+      <span class="desk-menu-sep"></span>
+      <button data-desk-action="chrome"><svg><use href="#i-chrome"></use></svg> Open Chrome</button>
+      <button data-desk-action="terminal"><svg><use href="#i-terminal"></use></svg> Open Terminal</button>
+      <span class="desk-menu-sep"></span>
+      <button data-desk-action="wallpaper"><svg><use href="#i-palette"></use></svg> Change wallpaper</button>
+      <button data-desk-action="display"><svg><use href="#i-monitor"></use></svg> Display settings</button>
+      <button data-desk-action="lock"><svg><use href="#i-lock"></use></svg> Lock CloudBook</button>
+    </div>
+
+    <main class="windows" id="windows"></main>
+
+    <nav class="dock" id="dock" aria-label="Dock"></nav>
+
+    <div class="toast-stack" id="toastStack"></div>
+
+    <section class="control-center" id="controlCenter" hidden aria-label="Control centre">
+      <div class="cc-head">
+        <div>
+          <p class="cc-eyebrow">Control centre</p>
+          <h2 id="ccGreeting">Good evening, Alex</h2>
+        </div>
+        <button class="cc-close" id="ccClose" aria-label="Close control centre"><svg><use href="#i-x"></use></svg></button>
+      </div>
+      <div class="cc-profile">
+        <span class="cc-avatar">A</span>
+        <div>
+          <strong id="ccName">Alex Rivera</strong>
+          <span><svg><use href="#i-cloud-check"></use></svg> Synced across 3 devices</span>
+        </div>
+        <span class="cc-live"><i></i> Live</span>
+      </div>
+      <div class="cc-toggles">
+        <button class="cc-toggle on" data-toggle="wifi">
+          <span class="cc-toggle-icon"><svg><use href="#i-wifi"></use></svg></span>
+          <span><strong>Cloud Wi-Fi</strong><small>6E · 10 Gbps</small></span>
+        </button>
+        <button class="cc-toggle on" data-toggle="sync">
+          <span class="cc-toggle-icon"><svg><use href="#i-cloud-check"></use></svg></span>
+          <span><strong>Cloud sync</strong><small>Everything is safe</small></span>
+        </button>
+        <button class="cc-toggle" data-toggle="bluetooth">
+          <span class="cc-toggle-icon"><svg><use href="#i-bluetooth"></use></svg></span>
+          <span><strong>Bluetooth</strong><small>AirPods Pro</small></span>
+        </button>
+        <button class="cc-toggle" data-toggle="focus">
+          <span class="cc-toggle-icon"><svg><use href="#i-moon"></use></svg></span>
+          <span><strong>Focus</strong><small>Do not disturb</small></span>
+        </button>
+      </div>
+      <div class="cc-sliders">
+        <label><span><svg><use href="#i-sun"></use></svg> Display</span><input type="range" id="brightnessRange" min="40" max="100" value="100"></label>
+        <label><span><svg><use href="#i-volume"></use></svg> Sound</span><input type="range" id="volumeRange" min="0" max="100" value="70"></label>
+      </div>
+      <div class="cc-calendar">
+        <div class="cc-cal-head"><span id="ccMonth">October 2026</span><span>Today</span></div>
+        <div class="cc-cal-grid" id="ccCalendar"></div>
+      </div>
+      <div class="cc-footer">
+        <button id="ccSettings"><svg><use href="#i-settings"></use></svg> Settings</button>
+        <button id="ccLock"><svg><use href="#i-lock"></use></svg> Lock</button>
+        <button id="ccSleep"><svg><use href="#i-power"></use></svg> Sleep</button>
+      </div>
+    </section>
+
+    <section class="launcher" id="launcher" hidden aria-label="App launcher">
+      <div class="launcher-inner">
+        <div class="launcher-top">
+          <div class="launcher-search">
+            <svg><use href="#i-search"></use></svg>
+            <input id="launcherSearch" type="search" placeholder="Search apps, files, and commands" autocomplete="off" spellcheck="false">
+            <kbd>esc</kbd>
+          </div>
+          <button class="launcher-close" id="launcherClose" aria-label="Close launcher"><svg><use href="#i-x"></use></svg></button>
+        </div>
+        <div class="launcher-title"><span>Applications</span><span id="launcherHint">8 vCPU · 20 GB RAM · 1 TB NVMe</span></div>
+        <div class="launcher-grid" id="launcherGrid"></div>
+        <div class="launcher-footer">
+          <button data-open="settings"><svg><use href="#i-settings"></use></svg> System settings</button>
+          <button data-open="store"><svg><use href="#i-store"></use></svg> App store</button>
+          <button id="launcherLock"><svg><use href="#i-lock"></use></svg> Lock screen</button>
+          <span class="launcher-tip">Press <kbd>⌘</kbd><kbd>K</kbd> anytime</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="lock-screen" id="lockScreen" hidden>
+      <div class="lock-blur"></div>
+      <div class="lock-clock">
+        <span id="lockDate">Monday, 26 October</span>
+        <strong id="lockTime">09:41</strong>
+      </div>
+      <div class="lock-card">
+        <span class="lock-avatar">A</span>
+        <h2>Alex Rivera</h2>
+        <p>Your cloud laptop is locked.</p>
+        <button class="btn primary" id="unlockBtn"><svg><use href="#i-lock"></use></svg> Unlock CloudBook</button>
+        <small><span class="lock-dot"></span> 20 GB RAM · 1 TB storage · us-west-2</small>
+      </div>
+    </div>
+
+    <div class="power-screen" id="powerScreen" hidden>
+      <div class="power-content">
+        <button id="powerWake" aria-label="Wake"><svg><use href="#i-power"></use></svg></button>
+        <p>CloudBook is asleep</p>
+        <span>Click the power button to reconnect</span>
+      </div>
+    </div>
+
+    <div class="modal-root" id="modalRoot"></div>
+  </div>
+
+  <template id="windowTemplate">
+    <section class="window" role="dialog" aria-modal="false">
+      <header class="window-bar">
+        <div class="window-controls">
+          <button class="wc close" data-window-action="close" aria-label="Close window"><span></span></button>
+          <button class="wc min" data-window-action="minimize" aria-label="Minimize window"><span></span></button>
+          <button class="wc max" data-window-action="maximize" aria-label="Maximize window"><span></span></button>
+        </div>
+        <div class="window-title">
+          <span class="window-app-icon"></span>
+          <span class="window-app-name"></span>
+        </div>
+        <div class="window-actions"></div>
+      </header>
+      <div class="window-body"></div>
+    </section>
+  </template>
+
+  <script src="core.js"></script>
+  <script src="apps.js"></script>
+  <script src="apps-p2.js"></script>
+  <script src="apps-p3.js"></script>
+  <script src="init.js"></script>
+</body>
+</html>
