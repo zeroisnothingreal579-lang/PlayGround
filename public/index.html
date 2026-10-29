@@ -42,7 +42,7 @@
         <span id="liveText">Booting</span>
       </div>
       <div class="pill pool-pill" title="Verified reachable exit nodes">
-        <span class="mini-label">Pool</span>
+        <span class="mini-label">Ready</span>
         <strong id="poolPill">0</strong>
       </div>
     </div>
@@ -69,6 +69,9 @@
             <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             verified
           </span>
+          <span class="rotating-badge" id="rotatingBadge" hidden title="This gateway can present a different exit IP on each connection">
+            rotating
+          </span>
         </div>
         <div class="ip-value" id="ip">—</div>
         <button class="rotate" id="rotateBtn" type="button">
@@ -76,6 +79,15 @@
           <span>Change IP</span>
           <kbd>R</kbd>
         </button>
+        <div class="auto-row">
+          <div class="auto-copy">
+            <span class="auto-title">Auto-rotate IP</span>
+            <span class="auto-sub" id="autoSub">Off · every 30s</span>
+          </div>
+          <button class="switch" id="autoToggle" type="button" role="switch" aria-checked="false" aria-label="Toggle auto-rotate">
+            <span></span>
+          </button>
+        </div>
         <div class="mini-grid">
           <div><span>Rotations</span><strong id="rotations">0</strong></div>
           <div><span>Countries</span><strong id="countries">44</strong></div>

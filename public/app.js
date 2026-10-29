@@ -25,6 +25,7 @@
     ip: $('ip'),
     protocol: $('protocolBadge'),
     verified: $('verifiedBadge'),
+    rotating: $('rotatingBadge'),
     rotations: $('rotations'),
     countries: $('countries'),
     nodes: $('nodes'),
@@ -34,6 +35,9 @@
     history: $('history')
   };
   const mobile = { flag: $('mFlag'), ip: $('mIp'), country: $('mCountry') };
+  const autoToggle = $('autoToggle');
+  const autoSub = $('autoSub');
+  let autoInfo = { enabled: false, seconds: 30, nextAt: 0 };
 
   const STATUS_LABEL = {
     booting: 'Booting',
@@ -50,6 +54,11 @@
   let lastFrameAt = 0;
   let busy = false;
   let lastLogLines = [];
+  let frameUrl = null;
+  let pendingFrame = null;
+  let frameRaf = 0;
+  let frameSocket = null;
+  let fallbackStream = null;
 
   function post(path, body) {
     return fetch(path, {
@@ -64,9 +73,17 @@
     busy = true;
     setBusy(true);
     boot.classList.remove('hidden');
-    post('/api/rotate');
+    post('/api/rotate').then((response) => {
+      if (!response || !response.ok) {
+        busy = false;
+        setBusy(false);
+      }
+    });
     setTimeout(() => {
-      if (busy) setBusy(false);
+      if (busy) {
+        busy = false;
+        setBusy(false);
+      }
     }, 45000);
   }
 
@@ -114,7 +131,8 @@
       exitEls.ip.classList.add('pending');
       mobile.ip.textContent = '—';
     }
-    exitEls.verified.hidden = !s.ipVerified;
+    exitEls.verified.hidden = !s.ipVerified || s.exitRotating;
+    exitEls.rotating.hidden = !s.exitRotating;
 
     exitEls.rotations.textContent = String(s.rotationCount || 0);
     if (s.pool) {
@@ -128,6 +146,11 @@
       urlInput.value = prettyUrl(s.browserUrl);
     }
     if (Array.isArray(s.history)) renderHistory(s.history);
+    if (s.auto) {
+      autoInfo = s.auto;
+      autoToggle.setAttribute('aria-checked', String(Boolean(s.auto.enabled)));
+      renderAuto();
+    }
 
     if (Array.isArray(s.logs) && s.logs.length) {
       lastLogLines = s.logs.slice(-4);
@@ -144,11 +167,22 @@
     }
     if (s.status === 'live' && hasFrame) {
       screenEl.classList.add('live', 'playing', 'has-frame');
-    } else if (s.status === 'error' && hasFrame) {
-      screenEl.classList.add('live');
+    } else if (s.status === 'error') {
+      screenEl.classList.remove('live', 'playing');
     }
     if (s.frameAt) modeStat.textContent = '1280 × 800';
   }
+
+  function renderAuto() {
+    if (!autoInfo.enabled) {
+      autoSub.textContent = `Off · every ${autoInfo.seconds || 30}s`;
+      return;
+    }
+    const remaining = autoInfo.nextAt ? Math.max(0, Math.ceil((autoInfo.nextAt - Date.now()) / 1000)) : null;
+    autoSub.textContent = remaining === null ? `On · every ${autoInfo.seconds}s` : `On · next in ${remaining}s`;
+  }
+
+  setInterval(renderAuto, 1000);
 
   function prettyUrl(url) {
     if (!url) return 'ip.me';
@@ -181,14 +215,80 @@
     return String(text).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
   }
 
+  function paintFrame(blob) {
+    pendingFrame = blob;
+    if (frameRaf) return;
+    frameRaf = requestAnimationFrame(() => {
+      frameRaf = 0;
+      const next = pendingFrame;
+      pendingFrame = null;
+      if (!next) return;
+      hasFrame = true;
+      lastFrameAt = Date.now();
+      const url = URL.createObjectURL(next);
+      const previous = frameUrl;
+      frameUrl = url;
+      img.src = url;
+      if (previous) URL.revokeObjectURL(previous);
+      screenEl.classList.add('has-frame');
+      if (snapshot?.status === 'live') screenEl.classList.add('live', 'playing');
+    });
+  }
+
   function applyFrame(frame) {
     if (!frame || !frame.data) return;
     frameMeta = { width: frame.width || 1280, height: frame.height || 800 };
+    if (frameUrl) {
+      URL.revokeObjectURL(frameUrl);
+      frameUrl = null;
+    }
     hasFrame = true;
     lastFrameAt = Date.now();
     img.src = `data:image/jpeg;base64,${frame.data}`;
     screenEl.classList.add('has-frame');
     if (snapshot?.status === 'live') screenEl.classList.add('live', 'playing');
+  }
+
+  function openFallbackFrames() {
+    if (fallbackStream) return;
+    fallbackStream = new EventSource('/api/stream?frames=1');
+    fallbackStream.addEventListener('frame', (event) => {
+      try {
+        applyFrame(JSON.parse(event.data));
+      } catch {}
+    });
+  }
+
+  function connectFrames() {
+    if (frameSocket) return;
+    const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const socket = new WebSocket(`${protocol}//${location.host}/api/frames`);
+    frameSocket = socket;
+    socket.binaryType = 'blob';
+    let opened = false;
+    socket.onopen = () => {
+      opened = true;
+      if (fallbackStream) {
+        fallbackStream.close();
+        fallbackStream = null;
+      }
+    };
+    socket.onmessage = (event) => {
+      if (event.data instanceof Blob) paintFrame(event.data);
+    };
+    socket.onerror = () => {
+      try {
+        socket.close();
+      } catch {}
+    };
+    socket.onclose = () => {
+      if (frameSocket === socket) frameSocket = null;
+      if (!opened) openFallbackFrames();
+      setTimeout(connectFrames, 2500);
+    };
+    setTimeout(() => {
+      if (!opened && frameSocket === socket) openFallbackFrames();
+    }, 2200);
   }
 
   setInterval(() => {
@@ -225,6 +325,8 @@
     source.onerror = () => {
       liveText.textContent = 'Reconnecting';
       livePill.classList.remove('is-live');
+      statusText.textContent = 'Lost connection to the browser host — retrying…';
+      setTimeout(refreshStatus, 1200);
     };
     source.onopen = () => refreshStatus();
   }
@@ -263,31 +365,66 @@
     });
   }
 
+  let touchState = null;
+
   screenEl.addEventListener('pointerdown', (event) => {
-    if (event.button !== 0 && event.pointerType === 'mouse') return;
     screenEl.focus({ preventScroll: true });
     screenEl.classList.add('touched');
-    const { x, y } = remotePoint(event.clientX, event.clientY);
-    post('/api/input', { action: 'down', x, y, button: event.button === 2 ? 'right' : 'left' });
+    const point = remotePoint(event.clientX, event.clientY);
+    if (event.pointerType === 'touch') {
+      touchState = { start: point, lastY: event.clientY, dragged: false, id: event.pointerId };
+      screenEl.setPointerCapture?.(event.pointerId);
+      event.preventDefault();
+      return;
+    }
+    if (event.button !== 0) return;
+    post('/api/input', { action: 'down', x: point.x, y: point.y, button: 'left' });
     screenEl.setPointerCapture?.(event.pointerId);
     event.preventDefault();
   });
 
   screenEl.addEventListener('pointermove', (event) => {
-    if (event.pointerType === 'mouse' && event.buttons === 0) {
-      sendMove(event);
+    if (event.pointerType === 'touch') {
+      if (!touchState) return;
+      const dy = event.clientY - touchState.lastY;
+      if (Math.abs(dy) > 2) {
+        touchState.dragged = true;
+        touchState.lastY = event.clientY;
+        post('/api/input', {
+          action: 'wheel',
+          x: touchState.start.x,
+          y: touchState.start.y,
+          deltaX: 0,
+          deltaY: Math.round(-dy * 2.2)
+        });
+      }
       return;
     }
     sendMove(event);
   });
 
   screenEl.addEventListener('pointerup', (event) => {
+    if (event.pointerType === 'touch') {
+      if (touchState && !touchState.dragged) {
+        post('/api/input', {
+          action: 'click',
+          x: touchState.start.x,
+          y: touchState.start.y,
+          button: 'left',
+          clickCount: 1
+        });
+      }
+      touchState = null;
+      event.preventDefault();
+      return;
+    }
     const { x, y } = remotePoint(event.clientX, event.clientY);
     post('/api/input', { action: 'up', x, y, button: event.button === 2 ? 'right' : 'left' });
     event.preventDefault();
   });
 
   screenEl.addEventListener('pointercancel', () => {
+    touchState = null;
     post('/api/input', { action: 'up', x: 0, y: 0, button: 'left' });
   });
 
@@ -377,6 +514,14 @@
     if (isDown && !event.repeat) post('/api/input', { action: 'press', key: mapped });
   }
 
+  autoToggle.addEventListener('click', () => {
+    const enabled = autoToggle.getAttribute('aria-checked') !== 'true';
+    autoToggle.setAttribute('aria-checked', String(enabled));
+    autoInfo = { ...autoInfo, enabled, nextAt: enabled ? Date.now() + autoInfo.seconds * 1000 : 0 };
+    renderAuto();
+    post('/api/auto', { enabled, seconds: autoInfo.seconds || 30 });
+  });
+
   rotateBtn.addEventListener('click', rotate);
   newIpTop.addEventListener('click', rotate);
   mRotate.addEventListener('click', rotate);
@@ -415,6 +560,7 @@
   screenEl.addEventListener('focus', () => screenEl.classList.add('touched'));
 
   connectStream();
+  connectFrames();
   refreshStatus();
   setInterval(refreshStatus, 10000);
 })();
